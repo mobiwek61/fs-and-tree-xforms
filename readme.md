@@ -1,4 +1,5 @@
-# Tests of recursive methods and traverse file hierarchies.  
+# Tests of recursive methods and traverse file hierarchies.   
+Not intended as a real resource for others, just my own testing.  
 
 ### This folder has a typescript app to create json menu spec from folder tree.
 - It can be written as one file in javascript but it's here in typescript so I can learn how to use typescript. Typescript makes setup enormously more complicated.  
