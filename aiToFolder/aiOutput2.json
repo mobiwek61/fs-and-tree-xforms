@@ -1,0 +1,94 @@
+/*
+created using this prompt to copilot:
+------------
+create json of urls of van gough artworks, from wikimedia, categorize as subject named 'paintingSubject' which is {landscape,flowers,portrait}, 'wrkdesc' should be artist name and date of work limit 20 give me data not the schema use the json schema on next line: { "$schema": "http://json-schema.org/draft-07/schema#", "type": "object", "properties": { "paintingSubject": { "type": "string" }, "wrkitems": { "type": "array", "items": { "type": "object", "properties": { "worktitle": { "type": "string" }, "workdesc": { "type": "string" },"interpret": { "type": "string" }, "url": { "type": "string", "format": "uri"} }, "required": ["worktitle", "url"] } } }, "required": ["paintingSubject", "items"] }
+-----------
+*/
+
+{
+  "paintingSubject": "Landscapes",
+  "wrkitems": [
+    {
+      "worktitle": "The Starry Night",
+      "workdesc": "Vincent van Gogh, June 1889",
+      "interpret": "A portrayal of the view from Van Gogh's asylum room, with an expressive night sky.",
+      "url": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
+    },
+    {
+      "worktitle": "Wheatfield with Crows",
+      "workdesc": "Vincent van Gogh, July 1890",
+      "interpret": "A dramatic painting with ominous crows flying over a turbulent wheat field.",
+      "url": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Wheatfield_with_Crows_-_Google_Art_Project.jpg"
+    },
+    {
+      "worktitle": "Wheat Field with Cypresses",
+      "workdesc": "Vincent van Gogh, June 1889",
+      "interpret": "Depicts the landscape near the asylum of Saint-Rémy, with swirling cypresses and wheat fields.",
+      "url": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Wheat_Field_with_Cypresses_-_Google_Art_Project.jpg"
+    },
+    {
+      "worktitle": "Olive Trees",
+      "workdesc": "Vincent van Gogh, June 1889",
+      "interpret": "Captures the ancient olive trees under the Provençal sky.",
+      "url": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Olive_Trees_-_Google_Art_Project.jpg"
+    }
+  ]
+},
+{
+  "paintingSubject": "Flowers",
+  "wrkitems": [
+    {
+      "worktitle": "Irises",
+      "workdesc": "Vincent van Gogh, May 1889",
+      "interpret": "One of Van Gogh's most famous floral compositions, showcasing his brilliant use of color.",
+      "url": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Irises_-_Google_Art_Project.jpg"
+    },
+    {
+      "worktitle": "Sunflowers",
+      "workdesc": "Vincent van Gogh, August 1887",
+      "interpret": "Part of a series of sunflower paintings, highlighting Van Gogh's fascination with the flower.",
+      "url": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Sunflowers_-_Google_Art_Project.jpg"
+    },
+    {
+      "worktitle": "Vase with Fifteen Sunflowers",
+      "workdesc": "Vincent van Gogh, August 1887",
+      "interpret": "Shows a vibrant bouquet of sunflowers in a vase, radiating warmth and light.",
+      "url": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Vase_with_Fifteen_Sunflowers_-_Google_Art_Project.jpg"
+    },
+    {
+      "worktitle": "Roses",
+      "workdesc": "Vincent van Gogh, May 1890",
+      "interpret": "A delicate painting of roses, created during Van Gogh's time at the asylum.",
+      "url": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Roses_-_Google_Art_Project.jpg"
+    }
+  ]
+},
+{
+  "paintingSubject": "Portraits",
+  "wrkitems": [
+    {
+      "worktitle": "Portrait of Dr. Gachet",
+      "workdesc": "Vincent van Gogh, June 1890",
+      "interpret": "Portrait of the doctor who cared for Van Gogh during his last months.",
+      "url": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Portrait_of_Dr._Gachet_-_Google_Art_Project.jpg"
+    },
+    {
+      "worktitle": "Self-Portrait",
+      "workdesc": "Vincent van Gogh, August 1887",
+      "interpret": "One of Van Gogh's many self-portraits, displaying his intense and expressive style.",
+      "url": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Self-Portrait_-_Google_Art_Project.jpg"
+    },
+    {
+      "worktitle": "Portrait of Joseph Roulin",
+      "workdesc": "Vincent van Gogh, January 1889",
+      "interpret": "Depicts Van Gogh's close friend and the postman in Arles.",
+      "url": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Portrait_of_Joseph_Roulin_-_Google_Art_Project.jpg"
+    },
+    {
+      "worktitle": "The Postman",
+      "workdesc": "Vincent van Gogh, June 1889",
+      "interpret": "Another portrait of Joseph Roulin, capturing his kind and gentle nature.",
+      "url": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_The_Postman_-_Google_Art_Project.jpg"
+    }
+  ]
+}

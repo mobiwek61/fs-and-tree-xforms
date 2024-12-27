@@ -1,0 +1,99 @@
+create json of urls of van gough include title as 'ftitle' categorize as paintingSubject label items array 'items'
+
+create json of urls of van gough artworks, 
+from library of congress 
+label title 'worktitle' categorize as paintingSubject,
+label items array 'items' limit 20
+
+=====================
+# did above query, then told it to create json schema, then edited schema,
+# removing 'description' fields and changed field names.
+
+# this worked ok for a while but then just showed the schema and wouldnt show data
+# then I added "give me data not the schema"
+
+create json of urls of van gough artworks, 
+from wikimedia, categorize as subject named 'paintingSubject' which is {landscape,flowers,portrait}, 
+'wrkdesc' should be artist name and date of work
+limit 20 
+give me data not the schema
+use the json schema on next line: 
+{ 
+"$schema": "http://json-schema.org/draft-07/schema#", 
+"type": "object", 
+"properties": { "paintingSubject": { "type": "string" }, 
+"wrkitems": { "type": "array", "items": { "type": "object", "properties": { 
+        "worktitle": { "type": "string" }, 
+        "workdesc": { "type": "string" }, 
+        "url": { "type": "string", "format": "uri"} }, 
+"required": ["worktitle", "url"] } } }, 
+"required": ["paintingSubject", "items"] 
+}
+======== output ===========
+[
+  {
+    "paintingSubject": "Landscape",
+    "wrkitems": [
+      {
+        "worktitle": "Wheatfield with Crows",
+        "workdesc": "Vincent van Gogh, 1890",
+        "url": "https://commons.wikimedia.org/wiki/File:Wheatfield_with_Crows.jpg"
+      },
+      {
+        "worktitle": "The Starry Night",
+        "workdesc": "Vincent van Gogh, 1889",
+        "url": "https://commons.wikimedia.org/wiki/File:Starry_Night.jpg"
+      },
+      {
+        "worktitle": "Olive Trees",
+        "workdesc": "Vincent van Gogh, 1889",
+        "url": "https://commons.wikimedia.org/wiki/File:Olive_Trees.jpg"
+      }
+    ]
+  },
+  {
+    "paintingSubject": "Flowers",
+    "wrkitems": [
+      {
+        "worktitle": "Sunflowers",
+        "workdesc": "Vincent van Gogh, 1888",
+        "url": "https://commons.wikimedia.org/wiki/File:Sunflowers.jpg"
+      },
+      {
+        "worktitle": "Irises",
+        "workdesc": "Vincent van Gogh, 1889",
+        "url": "https://commons.wikimedia.org/wiki/File:Irises.jpg"
+      },
+      {
+        "worktitle": "Almond Blossoms",
+        "workdesc": "Vincent van Gogh, 1890",
+        "url": "https://commons.wikimedia.org/wiki/File:Almond_Blossoms.jpg"
+      }
+    ]
+  },
+  {
+    "paintingSubject": "Portrait",
+    "wrkitems": [
+      {
+        "worktitle": "Self-Portrait with Bandaged Ear",
+        "workdesc": "Vincent van Gogh, 1889",
+        "url": "https://commons.wikimedia.org/wiki/File:Self-Portrait_with_Bandaged_Ear.jpg"
+      },
+      {
+        "worktitle": "Portrait of Dr. Gachet",
+        "workdesc": "Vincent van Gogh, 1890",
+        "url": "https://commons.wikimedia.org/wiki/File:Portrait_of_Dr._Gachet.jpg"
+      },
+      {
+        "worktitle": "Portrait of Père Tanguy",
+        "workdesc": "Vincent van Gogh, 1887",
+        "url": "https://commons.wikimedia.org/wiki/File:Portrait_of_P%C3%A8re_Tanguy.jpg"
+      }
+    ]
+  }
+]
+
+
+========================
+this works. it asked if it should show all 50
+ignore New York Metropolitan Museum of Art. create json of of van gough artworks, categorize as subject named 'paintingSubject' which is {landscape,flowers,portrait}, 'wrkdesc' should be artist name and date of work. get 50 artworks. give me data not the schema use the json schema on next line: { "$schema": "http://json-schema.org/draft-07/schema#", "type": "object", "properties": { "paintingSubject": { "type": "string" }, "wrkitems": { "type": "array", "items": { "type": "object", "properties": { "worktitle": { "type": "string" }, "workdesc": { "type": "string" },"required": ["worktitle"] } } }, "required": ["paintingSubject", "items"] }

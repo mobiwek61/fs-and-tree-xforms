@@ -1,0 +1,12 @@
+
+
+  {
+  "$schema": "./pictureMetaDataSchema.json", 
+  "comment2": "the $schema tag causes VSCode to use the schema for intellisence, errors",
+  "jj":"asdf",
+  "lookup":[
+    { "LEAF": "American Gothic", "imgFileName":"", "txtdesc":"By Grant Wood via metadata file" },
+    { "LEAF": "beets.JPG", "imgFileName":"", "txtdesc":"From farmers mkt" },
+    { "LEAF":""}
+  ]
+  }

@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "lookup": { 
+      "type": "array",
+      "items":  { "$ref": "#imageSpec1" } ,
+      "additionalItems":false
+    }
+  },
+  "required": [
+    "$schema",
+    "lookup"
+  ],
+  "$defs": {
+    "imageSpec": {
+          "$anchor": "imageSpec1",
+          "type": "object",
+          "properties": {
+            "LEAF": {
+              "type": "string"
+            },
+            "imgFileName": {
+              "type": "string"
+            },
+            "txtdesc": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "LEAF",
+            "txtdesc",
+            "imgFileName"
+          ]
+    }
+  }
+}

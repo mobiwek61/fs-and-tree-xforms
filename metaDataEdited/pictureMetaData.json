@@ -1,0 +1,48 @@
+[
+	{
+		"comment2": "the $schema tag causes VSCode to use the schema for intellisence, errors"
+	},
+	{
+		"$schema": "./pictureMetaDataSchema.json"
+	},
+	{
+		"imgFileName": "zzAmerican_Gothic88Wikimedia.jpg",
+		"txtdesc": "",
+		"mwmtype": "image"
+	},
+	{
+		"imgFileName": "enterpriseInProfile.jpg",
+		"txtdesc": "",
+		"mwmtype": "image"
+	},
+	{
+		"imgFileName": "imgLoading.JPG",
+		"txtdesc": "",
+		"mwmtype": "image"
+	},
+	{
+		"imgFileName": "LICENSE",
+		"txtdesc": "",
+		"mwmtype": "image"
+	},
+	{
+		"imgFileName": "LOC-AbeLincoln.jpg",
+		"txtdesc": "",
+		"mwmtype": "image"
+	},
+	{
+		"imgFileName": "loc-shipbuilding.jpg",
+		"txtdesc": "",
+		"mwmtype": "image"
+	},
+	{
+		"imgFileName": "samplePerson.jpg",
+		"txtdesc": "",
+		"mwmtype": "image"
+	},
+	{
+		"imgFileName": "WIKIMEDIA-Winslow-HomerFogWarning.jpg",
+		"txtdesc": "",
+		"mwmtype": "image"
+	}
+]

@@ -1,0 +1,281 @@
+make a hierarchical list of food categories. 
+top level is meat, fish, fruit and desserts. 
+output using this json schema:
+===============
+create a json schema for this data. BRANCH should appear as an attribute instead of LEAF for nodes which have an items attribute. Here is the data: { "LEAF": "American_Gothic", "txtdesc": "", "imgurl": "/jpeg/American_Gothic88Wikimedia.jpg", "mwmkey": "American_Gothic", "mwmtype": "image" }, { "LEAF": "captionAnttitle", "txtdesc": "", "imgurl": "/jpeg/captionAnttitle.jpg", "mwmkey": "captionAnttitle", "mwmtype": "image" }, { "LEAF": "enterpriseInProfile", "txtdesc": "", "imgurl": "/jpeg/enterpriseInProfile.jpg", "mwmkey": "enterpriseInProfile", "mwmtype": "image" }, { "BRANCH": "farmersmkt", "mwmkey": "farmersmkt", "items": [ { "LEAF": "beets", "txtdesc": "", "imgurl": "/jpeg/farmersmkt/beets.JPG", "mwmkey": "beets", "mwmtype": "image" }, { "LEAF": "daisy", "txtdesc": "", "imgurl": "/jpeg/farmersmkt/daisy.JPG", "mwmkey": "daisy", "mwmtype": "image" }, { "LEAF": "garlic", "txtdesc": "", "imgurl": "/jpeg/farmersmkt/garlic.JPG", "mwmkey": "garlic", "mwmtype": "image" }, { "LEAF": "jalepenos", "txtdesc": "", "imgurl": "/jpeg/farmersmkt/jalepenos.JPG", "mwmkey": "jalepenos", "mwmtype": "image" } ] }, { "BRANCH": "hist", "mwmkey": "hist", "items": [ { "BRANCH": "aerospace", "mwmkey": "aerospace", "items": [ { "LEAF": "WIKIMEDIA-spaceShuttleOrbit", "txtdesc": "", "imgurl": "/jpeg/hist/aerospace/WIKIMEDIA-spaceShuttleOrbit.jpg", "mwmkey": "WIKIMEDIA-spaceShuttleOrbit", "mwmtype": "image" }, { "LEAF": "WIKIMEDIA-spaceShuttleTransport", "txtdesc": "", "imgurl": "/jpeg/hist/aerospace/WIKIMEDIA-spaceShuttleTransport.jpg", "mwmkey": "WIKIMEDIA-spaceShuttleTransport", "mwmtype": "image" }, { "LEAF": "WIKIMEDIA-X-15_flying", "txtdesc": "", "imgurl": "/jpeg/hist/aerospace/WIKIMEDIA-X-15_flying.jpg", "mwmkey": "WIKIMEDIA-X-15_flying", "mwmtype": "image" } ] }, { "LEAF": "American_Gothic", "txtdesc": "", "imgurl": "/jpeg/hist/American_Gothic88Wikimedia.jpg", "mwmkey": "American_Gothic", "mwmtype": "image" }, { "BRANCH": "benFranklin", "mwmkey": "benFranklin", "items": [ { "LEAF": "LOC-benFranklinSpeedOfShips", "txtdesc": "", "imgurl": "/jpeg/hist/benFranklin/LOC-benFranklinSpeedOfShips.jpg", "mwmkey": "LOC-benFranklinSpeedOfShips", "mwmtype": "image" }, { "LEAF": "ship_diagram", "txtdesc": "", "imgurl": "/jpeg/hist/benFranklin/ship_diagram88HHLOC-benFranklin_sailingShipDiagram.jpg", "mwmkey": "ship_diagram", "mwmtype": "handwriting" } ] }, { "BRANCH": "horaceGreeley", "mwmkey": "horaceGreeley", "items": [ { "LEAF": "LOC-greeley-apprenticeagreement", "txtdesc": "", "imgurl": "/jpeg/hist/horaceGreeley/LOC-greeley-apprenticeagreement.jpg", "mwmkey": "LOC-greeley-apprenticeagreement", "mwmtype": "image" }, { "LEAF": "LOC-greeleyReminices1_enh", "txtdesc": "", "imgurl": "/jpeg/hist/horaceGreeley/LOC-greeleyReminices1_enh.jpg", "mwmkey": "LOC-greeleyReminices1_enh", "mwmtype": "image" }, { "LEAF": "LOC-nyTribuneMay16-1866", "txtdesc": "", "imgurl": "/jpeg/hist/horaceGreeley/LOC-nyTribuneMay16-1866.jpg", "mwmkey": "LOC-nyTribuneMay16-1866", "mwmtype": "image" } ] } ] }, { "LEAF": "imgLoading", "txtdesc": "", "imgurl": "/jpeg/imgLoading.JPG", "mwmkey": "imgLoading", "mwmtype": "image" }, { "LEAF": "Kangaroo", "txtdesc": "", "imgurl": "/jpeg/Kangaroo88geo_stubbsWIKIMED.jpg", "mwmkey": "Kangaroo", "mwmtype": "image" }, { "LEAF": "LICENSE", "txtdesc": "", "imgurl": "/jpeg/LICENSE", "mwmkey": "LICENSE", "mwmtype": "image" }, { "LEAF": "LOC-AbeLincoln", "txtdesc": "", "imgurl": "/jpeg/LOC-AbeLincoln.jpg", "mwmkey": "LOC-AbeLincoln", "mwmtype": "image" }, { "LEAF": "loc-shipbuilding", "txtdesc": "", "imgurl": "/jpeg/loc-shipbuilding.jpg", "mwmkey": "loc-shipbuilding", "mwmtype": "image" }, { "LEAF": "modjpeg", "txtdesc": "", "imgurl": "/jpeg/modjpeg.jpg", "mwmkey": "modjpeg", "mwmtype": "image" }, { "LEAF": "samplePerson", "txtdesc": "", "imgurl": "/jpeg/samplePerson.jpg", "mwmkey": "samplePerson", "mwmtype": "image" }, { "LEAF": "WIKIMEDIA-Winslow-HomerFogWarning", "txtdesc": "", "imgurl": "/jpeg/WIKIMEDIA-Winslow-HomerFogWarning.jpg", "mwmkey": "WIKIMEDIA-Winslow-HomerFogWarning", "mwmtype": "image" } ]
+
+===========
+this may work ok:
+create test data in 2 levels with this json schema:{ "$schema": "http://json-schema.org/draft-04/schema#", "type": "object", "properties": { "BRANCH": { "type": "string" }, "LEAF": { "type": "string" }, "txtdesc": { "type": "string" }, "imgurl": { "type": "string" }, "mwmkey": { "type": "string" }, "mwmtype": { "type": "string" }, "items": { "type": "array", "items": { "$ref": "#/definitions/item" } } }, "required": ["imgurl", "mwmkey", "mwmtype"], "definitions": { "item": { "type": "object", "properties": { "BRANCH": { "type": "string" }, "LEAF": { "type": "string" }, "txtdesc": { "type": "string" }, "imgurl": { "type": "string" }, "mwmkey": { "type": "string" }, "mwmtype": { "type": "string" }, "items": { "type": "array", "items": { "$ref": "#/definitions/item" } } }, "required": ["imgurl", "mwmkey", "mwmtype"], "dependencies": { "items": ["BRANCH"] }
+=============
+seems ok:
+make a hierarchical list of food categories. 
+top level is meat, fish, fruit and desserts. 
+output using this json schema: 
+{ "$schema": "http://json-schema.org/draft-04/schema#", "type": "object", 
+    "properties": { 
+        "BRANCH": { "type": "string" }, "LEAF": { "type": "string" }, "txtdesc": { "type": "string" }, 
+        "imgurl": { "type": "string" }, "mwmkey": { "type": "string" }, "mwmtype": { "type": "string" }, 
+        "items": { "type": "array", "items": { "$ref": "#/definitions/item" } } 
+    }, 
+    "required": ["imgurl", "mwmkey", "mwmtype"], 
+    "definitions": { "item": 
+        { "type": "object", 
+            "properties": { 
+                "BRANCH": { "type": "string" }, "LEAF": { "type": "string" }, "txtdesc": { "type": "string" }, 
+                "imgurl": { "type": "string" }, "mwmkey": { "type": "string" }, 
+                "mwmtype": { "type": "string" }, 
+                "items": { "type": "array", "items": { "$ref": "#/definitions/item" } } 
+            }, 
+            "required": ["imgurl", "mwmkey", "mwmtype"], "dependencies": { "items": ["BRANCH"] }
+        }
+    }
+}
+=================
+ok
+
+
+make a hierarchical list of food categories. top levels are cocktails, meat, fish, fruit. 
+Depth will be 4 levels. output using this json schema: 
+{ "$schema": "http://json-schema.org/draft-04/schema#", "type": "object", 
+    "properties": { 
+        "BRANCH": { "type": "string" }, "LEAF": { "type": "string" }, "txtdesc": { "type": "string" }, 
+        "imgurl": { "type": "string" }, "mwmkey": { "type": "string" }, "mwmtype": { "type": "string" }, 
+        "items": { "type": "array", "items": { "$ref": "#/definitions/item" } } 
+    }, 
+    "required": ["imgurl", "mwmkey", "mwmtype"], 
+    "definitions": { "item": 
+        { "type": "object", 
+            "properties": { 
+                "BRANCH": { "type": "string" }, "LEAF": { "type": "string" }, "txtdesc": { "type": "string" }, 
+                "imgurl": { "type": "string" }, "mwmkey": { "type": "string" }, 
+                "mwmtype": { "type": "string" }, 
+                "items": { "type": "array", "items": { "$ref": "#/definitions/item" } } 
+            }, 
+            "required": ["imgurl", "mwmkey", "mwmtype"], "dependencies": { "items": ["BRANCH"] }
+        }
+    }
+}
+result:
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "BRANCH": "Food Categories",
+    "txtdesc": "Top level food categories",
+    "imgurl": "/jpeg/food_categories.jpg",
+    "mwmkey": "food_categories",
+    "mwmtype": "image",
+    "items": [
+      {
+        "BRANCH": "Cocktails",
+        "txtdesc": "Various types of cocktails",
+        "imgurl": "/jpeg/cocktails.jpg",
+        "mwmkey": "cocktails",
+        "mwmtype": "image",
+        "items": [
+          {
+            "BRANCH": "Classic Cocktails",
+            "txtdesc": "Classic cocktail recipes",
+            "imgurl": "/jpeg/classic_cocktails.jpg",
+            "mwmkey": "classic_cocktails",
+            "mwmtype": "image",
+            "items": [
+              {
+                "BRANCH": "Margarita",
+                "txtdesc": "Classic margarita",
+                "imgurl": "/jpeg/margarita.jpg",
+                "mwmkey": "margarita",
+                "mwmtype": "image",
+                "items": [
+                  {
+                    "LEAF": "Frozen Margarita",
+                    "txtdesc": "Frozen margarita",
+                    "imgurl": "/jpeg/frozen_margarita.jpg",
+                    "mwmkey": "frozen_margarita",
+                    "mwmtype": "image"
+                  },
+                  {
+                    "LEAF": "Spicy Margarita",
+                    "txtdesc": "Spicy margarita",
+                    "imgurl": "/jpeg/spicy_margarita.jpg",
+                    "mwmkey": "spicy_margarita",
+                    "mwmtype": "image"
+                  }
+                ]
+              },
+              {
+                "BRANCH": "Mojito",
+                "txtdesc": "Refreshing mojito",
+                "imgurl": "/jpeg/mojito.jpg",
+                "mwmkey": "mojito",
+                "mwmtype": "image",
+                "items": [
+                  {
+                    "LEAF": "Classic Mojito",
+                    "txtdesc": "Classic mojito",
+                    "imgurl": "/jpeg/classic_mojito.jpg",
+                    "mwmkey": "classic_mojito",
+                    "mwmtype": "image"
+                  },
+                  {
+                    "LEAF": "Strawberry Mojito",
+                    "txtdesc": "Strawberry mojito",
+                    "imgurl": "/jpeg/strawberry_mojito.jpg",
+                    "mwmkey": "strawberry_mojito",
+                    "mwmtype": "image"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "BRANCH": "Meat",
+        "txtdesc": "Various types of meat",
+        "imgurl": "/jpeg/meat.jpg",
+        "mwmkey": "meat",
+        "mwmtype": "image",
+        "items": [
+          {
+            "BRANCH": "Beef",
+            "txtdesc": "Different cuts of beef",
+            "imgurl": "/jpeg/beef.jpg",
+            "mwmkey": "beef",
+            "mwmtype": "image",
+            "items": [
+              {
+                "BRANCH": "Steak",
+                "txtdesc": "Various steak cuts",
+                "imgurl": "/jpeg/steak.jpg",
+                "mwmkey": "steak",
+                "mwmtype": "image",
+                "items": [
+                  {
+                    "LEAF": "Ribeye",
+                    "txtdesc": "Ribeye steak",
+                    "imgurl": "/jpeg/ribeye.jpg",
+                    "mwmkey": "ribeye",
+                    "mwmtype": "image"
+                  },
+                  {
+                    "LEAF": "T-Bone",
+                    "txtdesc": "T-Bone steak",
+                    "imgurl": "/jpeg/tbone.jpg",
+                    "mwmkey": "tbone",
+                    "mwmtype": "image"
+                  }
+                ]
+              },
+              {
+                "BRANCH": "Ground Beef",
+                "txtdesc": "Ground beef recipes",
+                "imgurl": "/jpeg/ground_beef.jpg",
+                "mwmkey": "ground_beef",
+                "mwmtype": "image",
+                "items": [
+                  {
+                    "LEAF": "Burgers",
+                    "txtdesc": "Juicy burgers",
+                    "imgurl": "/jpeg/burgers.jpg",
+                    "mwmkey": "burgers",
+                    "mwmtype": "image"
+                  },
+                  {
+                    "LEAF": "Meatballs",
+                    "txtdesc": "Savory meatballs",
+                    "imgurl": "/jpeg/meatballs.jpg",
+                    "mwmkey": "meatballs",
+                    "mwmtype": "image"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "BRANCH": "Fish",
+        "txtdesc": "Various types of fish",
+        "imgurl": "/jpeg/fish.jpg",
+        "mwmkey": "fish",
+        "mwmtype": "image",
+        "items": [
+          {
+            "BRANCH": "Salmon",
+            "txtdesc": "Fresh salmon",
+            "imgurl": "/jpeg/salmon.jpg",
+            "mwmkey": "salmon",
+            "mwmtype": "image",
+            "items": [
+              {
+                "BRANCH": "Grilled Salmon",
+                "txtdesc": "Grilled salmon recipes",
+                "imgurl": "/jpeg/grilled_salmon.jpg",
+                "mwmkey": "grilled_salmon",
+                "mwmtype": "image",
+                "items": [
+                  {
+                    "LEAF": "Lemon Grilled Salmon",
+                    "txtdesc": "Lemon grilled salmon",
+                    "imgurl": "/jpeg/lemon_grilled_salmon.jpg",
+                    "mwmkey": "lemon_grilled_salmon",
+                    "mwmtype": "image"
+                  },
+                  {
+                    "LEAF": "Herb Grilled Salmon",
+                    "txtdesc": "Herb grilled salmon",
+                    "imgurl": "/jpeg/herb_grilled_salmon.jpg",
+                    "mwmkey": "herb_grilled_salmon",
+                    "mwmtype": "image"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "BRANCH": "Fruit",
+        "txtdesc": "A variety of fresh fruits",
+        "imgurl": "/jpeg/fruit.jpg",
+        "mwmkey": "fruit",
+        "mwmtype": "image",
+        "items": [
+          {
+            "BRANCH": "Berries",
+            "txtdesc": "Different types of berries",
+            "imgurl": "/jpeg/berries.jpg",
+            "mwmkey": "berries",
+            "mwmtype": "image",
+            "items": [
+              {
+                "BRANCH": "Strawberries",
+                "txtdesc": "Fresh strawberries",
+                "imgurl": "/jpeg/strawberries.jpg",
+                "mwmkey": "strawberries",
+                "mwmtype": "image",
+                "items": [
+                  {
+                    "LEAF": "Organic Strawberries",
+                    "txtdesc": "Organic strawberries",
+                    "imgurl": "/jpeg/organic_strawberries.jpg",
+                    "mwmkey": "organic_strawberries",
+                    "mwmtype": "image"
+                  },
+                  {
+                    "LEAF": "Wild Strawberries",
+                    "txtdesc": "Wild strawberries",
+                    "imgurl": "/jpeg/wild_strawberries.jpg",
+                    "mwmkey": "wild_strawberries",
+                    "mwmtype": "image"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  
+=========
