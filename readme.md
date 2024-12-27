@@ -1,4 +1,4 @@
-tsProj/readme.md 11/19/24
+# Tests of recursive methods and traverse file hierarchies.  
 
 ### This folder has a typescript app to create json menu spec from folder tree.
 - It can be written as one file in javascript but it's here in typescript so I can learn how to use typescript. Typescript makes setup enormously more complicated.  
@@ -26,50 +26,7 @@ File launch.json appears with a new entry added to it.
     - swap view between 2 processes using right-side pulldown. 
     Strangely, tsc does not produce output; instead see errors in the ```problems``` tab in bottom window.
 - **Visual Studio Code** debugging is controlled by file "launch.json" which is in .gitignore because it contains local details. Here is an example launch.json for this project:
-```
-/** SAVE THIS!!! visual studio launch.json file for this project:
-{
-  // This file lives in the .vscode folder, which gets excluded from git by .gitignore because
-  //    it may have details about my computer.  
-  // ref: https://code.visualstudio.com/docs/editor/variables-reference
-  "version": "0.2.0",
-  "configurations": [
-    // that gets run as ../node_modules/typescript/bin/tsc --watch
-    // whenever the *.ts file changes, it gets transpiled into javascript so it can be run (see below)
-    // File tsconfig.json in the project tells tsc what to compile and how etc..
-    {
-      "name": "Transpile in watch mode",
-      "type": "node",
-      "request": "launch",
-      "runtimeExecutable": "tsc",
-      "cwd": "${workspaceFolder}\\tsProj", // run from this folder otherwise wont find ts file
-      "args": ["--watch"] // '--verbose' may only be used with '--build'
-      // refer to tsconfig.json for how it chooses *.ts to compile
-    },
-    {
-      // this runs the compiled .js file created from tsc transpiler above
-      "name": "run javascript",
-      "type": "node",
-      "request": "launch",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      // "program": "${workspaceFolder}\\tsProj\\compiledJS\\fileListInPublicJpeg.js",
-      "cwd": "${workspaceFolder}\\tsProj", // run from this folder; all paths now relative to here
-      // without cwd ->  "program": "${workspaceFolder}\\tsProj\\compiledJS\\fileListToMenuSpec_metaData.js",
-      "program": "compiledJS/fileListToMenuSpec_metaData.js",
-      "args": [
-        "--imgFolder", "../public/jpeg",
-        "--menuOut", "output/outMenuFile.json",
-        "--pictureMetaFile", "metaDataEdited//pictureMetaData.json",
-        // slick but sloppy ->    "{ \"imgFolder\":\"./public/jpeg\", \"menuOut\":\"tsProj/output/outMenuFile.json\", \"pictureMetaFile\":\"tsProj/metaDataEdited//pictureMetaData.json\" }"
-      ]
-    }
-  ]
-}
 
-
-```
 ### Run project from git-bash command line (no VSCode)  
 This folder contains javascript transpiled from typescript.  
 Typically put here by "tsc" command, invoked by visual studio as a run specified in **launch.json**  
