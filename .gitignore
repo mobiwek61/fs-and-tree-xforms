@@ -5,8 +5,7 @@ trash*.jpeg
 # *.jpeg
 # *.JPG
 # *.JPEG
-**/outputFiles/newImageTree/*
-**/outputFiles/miniImages/*
+**/outputFiles/xformedImgs/*
 **/outputFiles/baks/*
 
 # consecutive numbered backups of converted files by menuBuilder

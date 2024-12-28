@@ -230,7 +230,7 @@ readAJSON('./public/jpeg').then(theArr => {
       {
         // this runs the compiled .js file created from tsc transpiler above
         "name": "imagesTreeCopyNResize",
-        //"console": "integratedTerminal", // allows for user input stdin for debug session
+        "console": "integratedTerminal", // allows for user input stdin for debug session
         "type": "node",
         "request": "launch",
         "skipFiles": [
@@ -242,7 +242,7 @@ readAJSON('./public/jpeg').then(theArr => {
         "program": "compiledJS/imagesTreeCopyNResize.js",
         "args": [
           "--imgSrcFolder", "./origJPEG",
-          "--DRY_RUN", "false" // this disables interactive verification prompt
+          //"--DRY_RUN", "false" // this disables interactive verification prompt
           // slick but sloppy ->    "{ \"imgFolder\":\"./public/jpeg\", \"menuOut\":\"menuBuilder/output/outMenuFile.json\", \"pictureMetaFile\":\"menuBuilder/metaDataEdited//pictureMetaData.json\" }"
         ]
       }
