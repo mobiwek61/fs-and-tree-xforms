@@ -21,8 +21,8 @@ const RESIZE_PX_FULL=887
 const RESIZE_PX_MINI=88
 /** destination of resized images. Cannot begin with / or have ..   */
 const DEST_ROOT = 'outputFiles/xformedImgs'
-const DEST_FULL = DEST_ROOT + '/fullsize/jpeg'
-const DEST_MINI = DEST_ROOT + '/miniSize/jpeg'
+const DEST_FULL = DEST_ROOT + '/fullsize'
+const DEST_MINI = DEST_ROOT + '/miniSize'
 // in VSCode, to get interactive terminal, launch.json must have this ->      "console": "integratedTerminal",
 var DRY_RUN=true;
 showFullCommandLine()
