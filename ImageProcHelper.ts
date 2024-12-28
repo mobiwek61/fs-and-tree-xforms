@@ -3,7 +3,7 @@
 import exifr from 'exifr'
 import fs from 'fs'
 // var exif_reader = require('exif-reader'); 
-import { TestPie, TestPie2 } from "./PiexifHelper";
+import { TestPie, TestPie2 }  from "./PiexifHelper";
 const sharp = require('sharp');
 
 const ResizeImage = async ( srcFileName:string , newWidth:number, destFileName:string) => {

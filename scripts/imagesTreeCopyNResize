@@ -1,4 +1,4 @@
 #!/bin/bash
 # without this filename completion for command wont work
 
-node.exe compiledJS/imagesTreeCopyNResize.js --imgSrcFolder ./origJPEG/jpeg --PIXMINI 99 --PIXFULL 446
+node.exe typescriptCompiled/imagesTreeCopyNResize.js --imgSrcFolder ./origJPEG/jpeg --PIXMINI 99 --PIXFULL 446

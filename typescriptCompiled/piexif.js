@@ -1,4 +1,5 @@
-/* piexifjs 
+"use strict";
+/* piexifjs
 ORIGINAL FILE AS PUBLISHED. DO NOT EDIT.
 
 The MIT License (MIT)
@@ -23,77 +24,73 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
 (function () {
     "use strict";
     var that = {};
     that.version = "1.0.4";
-
     that.remove = function (jpeg) {
         var b64 = false;
         if (jpeg.slice(0, 2) == "\xff\xd8") {
-        } else if (jpeg.slice(0, 23) == "data:image/jpeg;base64," || jpeg.slice(0, 22) == "data:image/jpg;base64,") {
+        }
+        else if (jpeg.slice(0, 23) == "data:image/jpeg;base64," || jpeg.slice(0, 22) == "data:image/jpg;base64,") {
             jpeg = atob(jpeg.split(",")[1]);
             b64 = true;
-        } else {
+        }
+        else {
             throw new Error("Given data is not jpeg.");
         }
-        
         var segments = splitIntoSegments(jpeg);
-        var newSegments = segments.filter(function(seg){
-          return  !(seg.slice(0, 2) == "\xff\xe1" &&
-                   seg.slice(4, 10) == "Exif\x00\x00"); 
+        var newSegments = segments.filter(function (seg) {
+            return !(seg.slice(0, 2) == "\xff\xe1" &&
+                seg.slice(4, 10) == "Exif\x00\x00");
         });
-        
         var new_data = newSegments.join("");
         if (b64) {
             new_data = "data:image/jpeg;base64," + btoa(new_data);
         }
-
         return new_data;
     };
-
-
     that.insert = function (exif, jpeg) {
         var b64 = false;
         if (exif.slice(0, 6) != "\x45\x78\x69\x66\x00\x00") {
             throw new Error("Given data is not exif.");
         }
         if (jpeg.slice(0, 2) == "\xff\xd8") {
-        } else if (jpeg.slice(0, 23) == "data:image/jpeg;base64," || jpeg.slice(0, 22) == "data:image/jpg;base64,") {
+        }
+        else if (jpeg.slice(0, 23) == "data:image/jpeg;base64," || jpeg.slice(0, 22) == "data:image/jpg;base64,") {
             jpeg = atob(jpeg.split(",")[1]);
             b64 = true;
-        } else {
+        }
+        else {
             throw new Error("Given data is not jpeg.");
         }
-
         var exifStr = "\xff\xe1" + pack(">H", [exif.length + 2]) + exif;
         var segments = splitIntoSegments(jpeg);
         var new_data = mergeSegments(segments, exifStr);
         if (b64) {
             new_data = "data:image/jpeg;base64," + btoa(new_data);
         }
-
         return new_data;
     };
-
-
     that.load = function (data) {
         var input_data;
         if (typeof (data) == "string") {
             if (data.slice(0, 2) == "\xff\xd8") {
                 input_data = data;
-            } else if (data.slice(0, 23) == "data:image/jpeg;base64," || data.slice(0, 22) == "data:image/jpg;base64,") {
+            }
+            else if (data.slice(0, 23) == "data:image/jpeg;base64," || data.slice(0, 22) == "data:image/jpg;base64,") {
                 input_data = atob(data.split(",")[1]);
-            } else if (data.slice(0, 4) == "Exif") {
+            }
+            else if (data.slice(0, 4) == "Exif") {
                 input_data = data.slice(6);
-            } else {
+            }
+            else {
                 throw new Error("'load' gots invalid file data.");
             }
-        } else {
+        }
+        else {
             throw new Error("'load' gots invalid type argument.");
         }
-
         var exifDict = {};
         var exif_dict = {
             "0th": {},
@@ -107,20 +104,16 @@ SOFTWARE.
         if (exifReader.tiftag === null) {
             return exif_dict;
         }
-
         if (exifReader.tiftag.slice(0, 2) == "\x49\x49") {
             exifReader.endian_mark = "<";
-        } else {
+        }
+        else {
             exifReader.endian_mark = ">";
         }
-
-        var pointer = unpack(exifReader.endian_mark + "L",
-            exifReader.tiftag.slice(4, 8))[0];
+        var pointer = unpack(exifReader.endian_mark + "L", exifReader.tiftag.slice(4, 8))[0];
         exif_dict["0th"] = exifReader.get_ifd(pointer, "0th");
-
         var first_ifd_pointer = exif_dict["0th"]["first_ifd_pointer"];
         delete exif_dict["0th"]["first_ifd_pointer"];
-
         if (34665 in exif_dict["0th"]) {
             pointer = exif_dict["0th"][34665];
             exif_dict["Exif"] = exifReader.get_ifd(pointer, "Exif");
@@ -134,8 +127,7 @@ SOFTWARE.
             exif_dict["Interop"] = exifReader.get_ifd(pointer, "Interop");
         }
         if (first_ifd_pointer != "\x00\x00\x00\x00") {
-            pointer = unpack(exifReader.endian_mark + "L",
-                first_ifd_pointer)[0];
+            pointer = unpack(exifReader.endian_mark + "L", first_ifd_pointer)[0];
             exif_dict["1st"] = exifReader.get_ifd(pointer, "1st");
             if ((513 in exif_dict["1st"]) && (514 in exif_dict["1st"])) {
                 var end = exif_dict["1st"][513] + exif_dict["1st"][514];
@@ -143,33 +135,23 @@ SOFTWARE.
                 exif_dict["thumbnail"] = thumb;
             }
         }
-
         return exif_dict;
     };
-
-
     that.dump = function (exif_dict_original) {
         var TIFF_HEADER_LENGTH = 8;
-
         var exif_dict = copy(exif_dict_original);
         var header = "Exif\x00\x00\x4d\x4d\x00\x2a\x00\x00\x00\x08";
         var exif_is = false;
         var gps_is = false;
         var interop_is = false;
         var first_is = false;
-
-        var zeroth_ifd,
-            exif_ifd,
-            interop_ifd,
-            gps_ifd,
-            first_ifd;
-        
+        var zeroth_ifd, exif_ifd, interop_ifd, gps_ifd, first_ifd;
         if ("0th" in exif_dict) {
             zeroth_ifd = exif_dict["0th"];
-        } else {
+        }
+        else {
             zeroth_ifd = {};
         }
-        
         if ((("Exif" in exif_dict) && (Object.keys(exif_dict["Exif"]).length)) ||
             (("Interop" in exif_dict) && (Object.keys(exif_dict["Interop"]).length))) {
             zeroth_ifd[34665] = 1;
@@ -179,21 +161,22 @@ SOFTWARE.
                 exif_ifd[40965] = 1;
                 interop_is = true;
                 interop_ifd = exif_dict["Interop"];
-            } else if (Object.keys(exif_ifd).indexOf(that.ExifIFD.InteroperabilityTag.toString()) > -1) {
+            }
+            else if (Object.keys(exif_ifd).indexOf(that.ExifIFD.InteroperabilityTag.toString()) > -1) {
                 delete exif_ifd[40965];
             }
-        } else if (Object.keys(zeroth_ifd).indexOf(that.ImageIFD.ExifTag.toString()) > -1) {
+        }
+        else if (Object.keys(zeroth_ifd).indexOf(that.ImageIFD.ExifTag.toString()) > -1) {
             delete zeroth_ifd[34665];
         }
-
         if (("GPS" in exif_dict) && (Object.keys(exif_dict["GPS"]).length)) {
             zeroth_ifd[that.ImageIFD.GPSTag] = 1;
             gps_is = true;
             gps_ifd = exif_dict["GPS"];
-        } else if (Object.keys(zeroth_ifd).indexOf(that.ImageIFD.GPSTag.toString()) > -1) {
+        }
+        else if (Object.keys(zeroth_ifd).indexOf(that.ImageIFD.GPSTag.toString()) > -1) {
             delete zeroth_ifd[that.ImageIFD.GPSTag];
         }
-        
         if (("1st" in exif_dict) &&
             ("thumbnail" in exif_dict) &&
             (exif_dict["thumbnail"] != null)) {
@@ -202,23 +185,10 @@ SOFTWARE.
             exif_dict["1st"][514] = 1;
             first_ifd = exif_dict["1st"];
         }
-        
         var zeroth_set = _dict_to_bytes(zeroth_ifd, "0th", 0);
         var zeroth_length = (zeroth_set[0].length + exif_is * 12 + gps_is * 12 + 4 +
             zeroth_set[1].length);
-
-        var exif_set,
-            exif_bytes = "",
-            exif_length = 0,
-            gps_set,
-            gps_bytes = "",
-            gps_length = 0,
-            interop_set,
-            interop_bytes = "",
-            interop_length = 0,
-            first_set,
-            first_bytes = "",
-            thumbnail;
+        var exif_set, exif_bytes = "", exif_length = 0, gps_set, gps_bytes = "", gps_length = 0, interop_set, interop_bytes = "", interop_length = 0, first_set, first_bytes = "", thumbnail;
         if (exif_is) {
             exif_set = _dict_to_bytes(exif_ifd, "Exif", zeroth_length);
             exif_length = exif_set[0].length + interop_is * 12 + exif_set[1].length;
@@ -242,11 +212,7 @@ SOFTWARE.
                 throw new Error("Given thumbnail is too large. max 64kB");
             }
         }
-
-        var exif_pointer = "",
-            gps_pointer = "",
-            interop_pointer = "",
-            first_ifd_pointer = "\x00\x00\x00\x00";
+        var exif_pointer = "", gps_pointer = "", interop_pointer = "", first_ifd_pointer = "\x00\x00\x00\x00";
         if (exif_is) {
             var pointer_value = TIFF_HEADER_LENGTH + zeroth_length;
             var pointer_str = pack(">L", [pointer_value]);
@@ -289,23 +255,17 @@ SOFTWARE.
                 thumbnail_length_bytes + "\x00\x00\x00\x00" +
                 first_set[1] + thumbnail);
         }
-
         var zeroth_bytes = (zeroth_set[0] + exif_pointer + gps_pointer +
             first_ifd_pointer + zeroth_set[1]);
         if (exif_is) {
             exif_bytes = exif_set[0] + interop_pointer + exif_set[1];
         }
-
         return (header + zeroth_bytes + exif_bytes + gps_bytes +
             interop_bytes + first_bytes);
     };
-
-
     function copy(obj) {
         return JSON.parse(JSON.stringify(obj));
     }
-
-
     function _get_thumbnail(jpeg) {
         var segments = splitIntoSegments(jpeg);
         while (("\xff\xe0" <= segments[1].slice(0, 2)) && (segments[1].slice(0, 2) <= "\xff\xef")) {
@@ -313,73 +273,70 @@ SOFTWARE.
         }
         return segments.join("");
     }
-
-
     function _pack_byte(array) {
         return pack(">" + nStr("B", array.length), array);
     }
-
-
     function _pack_short(array) {
         return pack(">" + nStr("H", array.length), array);
     }
-
-
     function _pack_long(array) {
         return pack(">" + nStr("L", array.length), array);
     }
-
-
     function _value_to_bytes(raw_value, value_type, offset) {
         var four_bytes_over = "";
         var value_str = "";
-        var length,
-            new_value,
-            num,
-            den;
-
+        var length, new_value, num, den;
         if (value_type == "Byte") {
             length = raw_value.length;
             if (length <= 4) {
                 value_str = (_pack_byte(raw_value) +
                     nStr("\x00", 4 - length));
-            } else {
+            }
+            else {
                 value_str = pack(">L", [offset]);
                 four_bytes_over = _pack_byte(raw_value);
             }
-        } else if (value_type == "Short") {
+        }
+        else if (value_type == "Short") {
             length = raw_value.length;
             if (length <= 2) {
                 value_str = (_pack_short(raw_value) +
                     nStr("\x00\x00", 2 - length));
-            } else {
+            }
+            else {
                 value_str = pack(">L", [offset]);
                 four_bytes_over = _pack_short(raw_value);
             }
-        } else if (value_type == "Long") {
+        }
+        else if (value_type == "Long") {
             length = raw_value.length;
             if (length <= 1) {
                 value_str = _pack_long(raw_value);
-            } else {
+            }
+            else {
                 value_str = pack(">L", [offset]);
                 four_bytes_over = _pack_long(raw_value);
             }
-        } else if (value_type == "Ascii") {
+        }
+        else if (value_type == "Ascii") {
             new_value = raw_value + "\x00";
             length = new_value.length;
             if (length > 4) {
                 value_str = pack(">L", [offset]);
                 four_bytes_over = new_value;
-            } else {
+            }
+            else {
                 value_str = new_value + nStr("\x00", 4 - length);
             }
-        } else if (value_type == "Rational") {
+        }
+        else if (value_type == "Rational") {
             if (typeof (raw_value[0]) == "number") {
                 length = 1;
                 num = raw_value[0];
                 den = raw_value[1];
                 new_value = pack(">L", [num]) + pack(">L", [den]);
-            } else {
+            }
+            else {
                 length = raw_value.length;
                 new_value = "";
                 for (var n = 0; n < length; n++) {
@@ -391,13 +348,15 @@ SOFTWARE.
             }
             value_str = pack(">L", [offset]);
             four_bytes_over = new_value;
-        } else if (value_type == "SRational") {
+        }
+        else if (value_type == "SRational") {
             if (typeof (raw_value[0]) == "number") {
                 length = 1;
                 num = raw_value[0];
                 den = raw_value[1];
                 new_value = pack(">l", [num]) + pack(">l", [den]);
-            } else {
+            }
+            else {
                 length = raw_value.length;
                 new_value = "";
                 for (var n = 0; n < length; n++) {
@@ -409,21 +368,20 @@ SOFTWARE.
             }
             value_str = pack(">L", [offset]);
             four_bytes_over = new_value;
-        } else if (value_type == "Undefined") {
+        }
+        else if (value_type == "Undefined") {
             length = raw_value.length;
             if (length > 4) {
                 value_str = pack(">L", [offset]);
                 four_bytes_over = raw_value;
-            } else {
+            }
+            else {
                 value_str = raw_value + nStr("\x00", 4 - length);
             }
         }
-
         var length_str = pack(">L", [length]);
-
         return [length_str, value_str, four_bytes_over];
     }
-
     function _dict_to_bytes(ifd_dict, ifd, ifd_offset) {
         var TIFF_HEADER_LENGTH = 8;
         var tag_count = Object.keys(ifd_dict).length;
@@ -431,30 +389,30 @@ SOFTWARE.
         var entries_length;
         if (["0th", "1st"].indexOf(ifd) > -1) {
             entries_length = 2 + tag_count * 12 + 4;
-        } else {
+        }
+        else {
             entries_length = 2 + tag_count * 12;
         }
         var entries = "";
         var values = "";
         var key;
-
         for (var key in ifd_dict) {
             if (typeof (key) == "string") {
                 key = parseInt(key);
             }
             if ((ifd == "0th") && ([34665, 34853].indexOf(key) > -1)) {
                 continue;
-            } else if ((ifd == "Exif") && (key == 40965)) {
-                continue;
-            } else if ((ifd == "1st") && ([513, 514].indexOf(key) > -1)) {
+            }
+            else if ((ifd == "Exif") && (key == 40965)) {
                 continue;
             }
-
+            else if ((ifd == "1st") && ([513, 514].indexOf(key) > -1)) {
+                continue;
+            }
             var raw_value = ifd_dict[key];
             var key_str = pack(">H", [key]);
             var value_type = TAGS[ifd][key]["type"];
             var type_str = pack(">H", [TYPES[value_type]]);
-
             if (typeof (raw_value) == "number") {
                 raw_value = [raw_value];
             }
@@ -463,216 +421,196 @@ SOFTWARE.
             var length_str = b[0];
             var value_str = b[1];
             var four_bytes_over = b[2];
-
             entries += key_str + type_str + length_str + value_str;
             values += four_bytes_over;
         }
-
         return [entry_header + entries, values];
     }
-
-
-
     function ExifReader(data) {
-        var segments,
-            app1;
+        var segments, app1;
         if (data.slice(0, 2) == "\xff\xd8") { // JPEG
             segments = splitIntoSegments(data);
             app1 = getExifSeg(segments);
             if (app1) {
                 this.tiftag = app1.slice(10);
-            } else {
+            }
+            else {
                 this.tiftag = null;
             }
-        } else if (["\x49\x49", "\x4d\x4d"].indexOf(data.slice(0, 2)) > -1) { // TIFF
+        }
+        else if (["\x49\x49", "\x4d\x4d"].indexOf(data.slice(0, 2)) > -1) { // TIFF
             this.tiftag = data;
-        } else if (data.slice(0, 4) == "Exif") { // Exif
+        }
+        else if (data.slice(0, 4) == "Exif") { // Exif
             this.tiftag = data.slice(6);
-        } else {
+        }
+        else {
             throw new Error("Given file is neither JPEG nor TIFF.");
         }
     }
-
     ExifReader.prototype = {
         get_ifd: function (pointer, ifd_name) {
             var ifd_dict = {};
-            var tag_count = unpack(this.endian_mark + "H",
-                this.tiftag.slice(pointer, pointer + 2))[0];
+            var tag_count = unpack(this.endian_mark + "H", this.tiftag.slice(pointer, pointer + 2))[0];
             var offset = pointer + 2;
             var t;
             if (["0th", "1st"].indexOf(ifd_name) > -1) {
                 t = "Image";
-            } else {
+            }
+            else {
                 t = ifd_name;
             }
-
             for (var x = 0; x < tag_count; x++) {
                 pointer = offset + 12 * x;
-                var tag = unpack(this.endian_mark + "H",
-                    this.tiftag.slice(pointer, pointer + 2))[0];
-                var value_type = unpack(this.endian_mark + "H",
-                    this.tiftag.slice(pointer + 2, pointer + 4))[0];
-                var value_num = unpack(this.endian_mark + "L",
-                    this.tiftag.slice(pointer + 4, pointer + 8))[0];
+                var tag = unpack(this.endian_mark + "H", this.tiftag.slice(pointer, pointer + 2))[0];
+                var value_type = unpack(this.endian_mark + "H", this.tiftag.slice(pointer + 2, pointer + 4))[0];
+                var value_num = unpack(this.endian_mark + "L", this.tiftag.slice(pointer + 4, pointer + 8))[0];
                 var value = this.tiftag.slice(pointer + 8, pointer + 12);
-
                 var v_set = [value_type, value_num, value];
                 if (tag in TAGS[t]) {
                     ifd_dict[tag] = this.convert_value(v_set);
                 }
             }
-
             if (ifd_name == "0th") {
                 pointer = offset + 12 * tag_count;
                 ifd_dict["first_ifd_pointer"] = this.tiftag.slice(pointer, pointer + 4);
             }
-
             return ifd_dict;
         },
-
         convert_value: function (val) {
             var data = null;
             var t = val[0];
             var length = val[1];
             var value = val[2];
             var pointer;
-
             if (t == 1) { // BYTE
                 if (length > 4) {
                     pointer = unpack(this.endian_mark + "L", value)[0];
-                    data = unpack(this.endian_mark + nStr("B", length),
-                        this.tiftag.slice(pointer, pointer + length));
-                } else {
+                    data = unpack(this.endian_mark + nStr("B", length), this.tiftag.slice(pointer, pointer + length));
+                }
+                else {
                     data = unpack(this.endian_mark + nStr("B", length), value.slice(0, length));
                 }
-            } else if (t == 2) { // ASCII
+            }
+            else if (t == 2) { // ASCII
                 if (length > 4) {
                     pointer = unpack(this.endian_mark + "L", value)[0];
                     data = this.tiftag.slice(pointer, pointer + length - 1);
-                } else {
+                }
+                else {
                     data = value.slice(0, length - 1);
                 }
-            } else if (t == 3) { // SHORT
+            }
+            else if (t == 3) { // SHORT
                 if (length > 2) {
                     pointer = unpack(this.endian_mark + "L", value)[0];
-                    data = unpack(this.endian_mark + nStr("H", length),
-                        this.tiftag.slice(pointer, pointer + length * 2));
-                } else {
-                    data = unpack(this.endian_mark + nStr("H", length),
-                        value.slice(0, length * 2));
+                    data = unpack(this.endian_mark + nStr("H", length), this.tiftag.slice(pointer, pointer + length * 2));
                 }
-            } else if (t == 4) { // LONG
+                else {
+                    data = unpack(this.endian_mark + nStr("H", length), value.slice(0, length * 2));
+                }
+            }
+            else if (t == 4) { // LONG
                 if (length > 1) {
                     pointer = unpack(this.endian_mark + "L", value)[0];
-                    data = unpack(this.endian_mark + nStr("L", length),
-                        this.tiftag.slice(pointer, pointer + length * 4));
-                } else {
-                    data = unpack(this.endian_mark + nStr("L", length),
-                        value);
+                    data = unpack(this.endian_mark + nStr("L", length), this.tiftag.slice(pointer, pointer + length * 4));
                 }
-            } else if (t == 5) { // RATIONAL
+                else {
+                    data = unpack(this.endian_mark + nStr("L", length), value);
+                }
+            }
+            else if (t == 5) { // RATIONAL
                 pointer = unpack(this.endian_mark + "L", value)[0];
                 if (length > 1) {
                     data = [];
                     for (var x = 0; x < length; x++) {
-                        data.push([unpack(this.endian_mark + "L",
-                                this.tiftag.slice(pointer + x * 8, pointer + 4 + x * 8))[0],
-                                   unpack(this.endian_mark + "L",
-                                this.tiftag.slice(pointer + 4 + x * 8, pointer + 8 + x * 8))[0]
-                                   ]);
+                        data.push([unpack(this.endian_mark + "L", this.tiftag.slice(pointer + x * 8, pointer + 4 + x * 8))[0],
+                            unpack(this.endian_mark + "L", this.tiftag.slice(pointer + 4 + x * 8, pointer + 8 + x * 8))[0]
+                        ]);
                     }
-                } else {
-                    data = [unpack(this.endian_mark + "L",
-                            this.tiftag.slice(pointer, pointer + 4))[0],
-                            unpack(this.endian_mark + "L",
-                            this.tiftag.slice(pointer + 4, pointer + 8))[0]
-                            ];
                 }
-            } else if (t == 7) { // UNDEFINED BYTES
+                else {
+                    data = [unpack(this.endian_mark + "L", this.tiftag.slice(pointer, pointer + 4))[0],
+                        unpack(this.endian_mark + "L", this.tiftag.slice(pointer + 4, pointer + 8))[0]
+                    ];
+                }
+            }
+            else if (t == 7) { // UNDEFINED BYTES
                 if (length > 4) {
                     pointer = unpack(this.endian_mark + "L", value)[0];
                     data = this.tiftag.slice(pointer, pointer + length);
-                } else {
+                }
+                else {
                     data = value.slice(0, length);
                 }
-            } else if (t == 9) { // SLONG
+            }
+            else if (t == 9) { // SLONG
                 if (length > 1) {
                     pointer = unpack(this.endian_mark + "L", value)[0];
-                    data = unpack(this.endian_mark + nStr("l", length),
-                        this.tiftag.slice(pointer, pointer + length * 4));
-                } else {
-                    data = unpack(this.endian_mark + nStr("l", length),
-                        value);
+                    data = unpack(this.endian_mark + nStr("l", length), this.tiftag.slice(pointer, pointer + length * 4));
                 }
-            } else if (t == 10) { // SRATIONAL
+                else {
+                    data = unpack(this.endian_mark + nStr("l", length), value);
+                }
+            }
+            else if (t == 10) { // SRATIONAL
                 pointer = unpack(this.endian_mark + "L", value)[0];
                 if (length > 1) {
                     data = [];
                     for (var x = 0; x < length; x++) {
-                        data.push([unpack(this.endian_mark + "l",
-                                this.tiftag.slice(pointer + x * 8, pointer + 4 + x * 8))[0],
-                                   unpack(this.endian_mark + "l",
-                                this.tiftag.slice(pointer + 4 + x * 8, pointer + 8 + x * 8))[0]
-                                  ]);
+                        data.push([unpack(this.endian_mark + "l", this.tiftag.slice(pointer + x * 8, pointer + 4 + x * 8))[0],
+                            unpack(this.endian_mark + "l", this.tiftag.slice(pointer + 4 + x * 8, pointer + 8 + x * 8))[0]
+                        ]);
                     }
-                } else {
-                    data = [unpack(this.endian_mark + "l",
-                            this.tiftag.slice(pointer, pointer + 4))[0],
-                            unpack(this.endian_mark + "l",
-                            this.tiftag.slice(pointer + 4, pointer + 8))[0]
-                           ];
                 }
-            } else {
+                else {
+                    data = [unpack(this.endian_mark + "l", this.tiftag.slice(pointer, pointer + 4))[0],
+                        unpack(this.endian_mark + "l", this.tiftag.slice(pointer + 4, pointer + 8))[0]
+                    ];
+                }
+            }
+            else {
                 throw new Error("Exif might be wrong. Got incorrect value " +
                     "type to decode. type:" + t);
             }
-
             if ((data instanceof Array) && (data.length == 1)) {
                 return data[0];
-            } else {
+            }
+            else {
                 return data;
             }
         },
     };
-
-
     if (typeof window !== "undefined" && typeof window.btoa === "function") {
         var btoa = window.btoa;
     }
     if (typeof btoa === "undefined") {
-        var btoa = function (input) {        var output = "";
+        var btoa = function (input) {
+            var output = "";
             var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
             var i = 0;
             var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-
             while (i < input.length) {
-
                 chr1 = input.charCodeAt(i++);
                 chr2 = input.charCodeAt(i++);
                 chr3 = input.charCodeAt(i++);
-
                 enc1 = chr1 >> 2;
                 enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
                 enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
                 enc4 = chr3 & 63;
-
                 if (isNaN(chr2)) {
                     enc3 = enc4 = 64;
-                } else if (isNaN(chr3)) {
+                }
+                else if (isNaN(chr3)) {
                     enc4 = 64;
                 }
-
                 output = output +
-                keyStr.charAt(enc1) + keyStr.charAt(enc2) +
-                keyStr.charAt(enc3) + keyStr.charAt(enc4);
-
+                    keyStr.charAt(enc1) + keyStr.charAt(enc2) +
+                    keyStr.charAt(enc3) + keyStr.charAt(enc4);
             }
-
             return output;
         };
     }
-    
-    
     if (typeof window !== "undefined" && typeof window.atob === "function") {
         var atob = window.atob;
     }
@@ -683,43 +621,29 @@ SOFTWARE.
             var enc1, enc2, enc3, enc4;
             var i = 0;
             var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-
             input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-
             while (i < input.length) {
-
                 enc1 = keyStr.indexOf(input.charAt(i++));
                 enc2 = keyStr.indexOf(input.charAt(i++));
                 enc3 = keyStr.indexOf(input.charAt(i++));
                 enc4 = keyStr.indexOf(input.charAt(i++));
-
                 chr1 = (enc1 << 2) | (enc2 >> 4);
                 chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
                 chr3 = ((enc3 & 3) << 6) | enc4;
-
                 output = output + String.fromCharCode(chr1);
-
                 if (enc3 != 64) {
                     output = output + String.fromCharCode(chr2);
                 }
                 if (enc4 != 64) {
                     output = output + String.fromCharCode(chr3);
                 }
-
             }
-
             return output;
         };
     }
-
-
     function getImageSize(imageArray) {
         var segments = slice2Segments(imageArray);
-        var seg,
-            width,
-            height,
-            SOF = [192, 193, 194, 195, 197, 198, 199, 201, 202, 203, 205, 206, 207];
-
+        var seg, width, height, SOF = [192, 193, 194, 195, 197, 198, 199, 201, 202, 203, 205, 206, 207];
         for (var x = 0; x < segments.length; x++) {
             seg = segments[x];
             if (SOF.indexOf(seg[1]) >= 0) {
@@ -730,8 +654,6 @@ SOFTWARE.
         }
         return [width, height];
     }
-
-
     function pack(mark, array) {
         if (!(array instanceof Array)) {
             throw new Error("'pack' error. Got invalid type argument.");
@@ -739,13 +661,14 @@ SOFTWARE.
         if ((mark.length - 1) != array.length) {
             throw new Error("'pack' error. " + (mark.length - 1) + " marks, " + array.length + " elements.");
         }
-
         var littleEndian;
         if (mark[0] == "<") {
             littleEndian = true;
-        } else if (mark[0] == ">") {
+        }
+        else if (mark[0] == ">") {
             littleEndian = false;
-        } else {
+        }
+        else {
             throw new Error("");
         }
         var packed = "";
@@ -753,7 +676,6 @@ SOFTWARE.
         var val = null;
         var c = null;
         var valStr = null;
-
         while (c = mark[p]) {
             if (c.toLowerCase() == "b") {
                 val = array[p - 1];
@@ -762,28 +684,33 @@ SOFTWARE.
                 }
                 if ((val > 0xff) || (val < 0)) {
                     throw new Error("'pack' error.");
-                } else {
+                }
+                else {
                     valStr = String.fromCharCode(val);
                 }
-            } else if (c == "H") {
+            }
+            else if (c == "H") {
                 val = array[p - 1];
                 if ((val > 0xffff) || (val < 0)) {
                     throw new Error("'pack' error.");
-                } else {
+                }
+                else {
                     valStr = String.fromCharCode(Math.floor((val % 0x10000) / 0x100)) +
                         String.fromCharCode(val % 0x100);
                     if (littleEndian) {
                         valStr = valStr.split("").reverse().join("");
                     }
                 }
-            } else if (c.toLowerCase() == "l") {
+            }
+            else if (c.toLowerCase() == "l") {
                 val = array[p - 1];
                 if ((c == "l") && (val < 0)) {
                     val += 0x100000000;
                 }
                 if ((val > 0xffffffff) || (val < 0)) {
                     throw new Error("'pack' error.");
-                } else {
+                }
+                else {
                     valStr = String.fromCharCode(Math.floor(val / 0x1000000)) +
                         String.fromCharCode(Math.floor((val % 0x1000000) / 0x10000)) +
                         String.fromCharCode(Math.floor((val % 0x10000) / 0x100)) +
@@ -792,17 +719,15 @@ SOFTWARE.
                         valStr = valStr.split("").reverse().join("");
                     }
                 }
-            } else {
+            }
+            else {
                 throw new Error("'pack' error.");
             }
-
             packed += valStr;
             p += 1;
         }
-
         return packed;
     }
-
     function unpack(mark, str) {
         if (typeof (str) != "string") {
             throw new Error("'unpack' error. Got invalid type argument.");
@@ -811,25 +736,28 @@ SOFTWARE.
         for (var markPointer = 1; markPointer < mark.length; markPointer++) {
             if (mark[markPointer].toLowerCase() == "b") {
                 l += 1;
-            } else if (mark[markPointer].toLowerCase() == "h") {
+            }
+            else if (mark[markPointer].toLowerCase() == "h") {
                 l += 2;
-            } else if (mark[markPointer].toLowerCase() == "l") {
+            }
+            else if (mark[markPointer].toLowerCase() == "l") {
                 l += 4;
-            } else {
+            }
+            else {
                 throw new Error("'unpack' error. Got invalid mark.");
             }
         }
-
         if (l != str.length) {
             throw new Error("'unpack' error. Mismatch between symbol and string length. " + l + ":" + str.length);
         }
-
         var littleEndian;
         if (mark[0] == "<") {
             littleEndian = true;
-        } else if (mark[0] == ">") {
+        }
+        else if (mark[0] == ">") {
             littleEndian = false;
-        } else {
+        }
+        else {
             throw new Error("'unpack' error.");
         }
         var unpacked = [];
@@ -839,7 +767,6 @@ SOFTWARE.
         var c = null;
         var length = null;
         var sliced = "";
-
         while (c = mark[p]) {
             if (c.toLowerCase() == "b") {
                 length = 1;
@@ -848,7 +775,8 @@ SOFTWARE.
                 if ((c == "b") && (val >= 0x80)) {
                     val -= 0x100;
                 }
-            } else if (c == "H") {
+            }
+            else if (c == "H") {
                 length = 2;
                 sliced = str.slice(strPointer, strPointer + length);
                 if (littleEndian) {
@@ -856,7 +784,8 @@ SOFTWARE.
                 }
                 val = sliced.charCodeAt(0) * 0x100 +
                     sliced.charCodeAt(1);
-            } else if (c.toLowerCase() == "l") {
+            }
+            else if (c.toLowerCase() == "l") {
                 length = 4;
                 sliced = str.slice(strPointer, strPointer + length);
                 if (littleEndian) {
@@ -869,18 +798,16 @@ SOFTWARE.
                 if ((c == "l") && (val >= 0x80000000)) {
                     val -= 0x100000000;
                 }
-            } else {
+            }
+            else {
                 throw new Error("'unpack' error. " + c);
             }
-
             unpacked.push(val);
             strPointer += length;
             p += 1;
         }
-
         return unpacked;
     }
-
     function nStr(ch, num) {
         var str = "";
         for (var i = 0; i < num; i++) {
@@ -888,77 +815,65 @@ SOFTWARE.
         }
         return str;
     }
-
     function splitIntoSegments(data) {
         if (data.slice(0, 2) != "\xff\xd8") {
             throw new Error("Given data isn't JPEG.");
         }
-
         var head = 2;
         var segments = ["\xff\xd8"];
         while (true) {
             if (data.slice(head, head + 2) == "\xff\xda") {
                 segments.push(data.slice(head));
                 break;
-            } else {
+            }
+            else {
                 var length = unpack(">H", data.slice(head + 2, head + 4))[0];
                 var endPoint = head + length + 2;
                 segments.push(data.slice(head, endPoint));
                 head = endPoint;
             }
-
             if (head >= data.length) {
                 throw new Error("Wrong JPEG data.");
             }
         }
         return segments;
     }
-
-
     function getExifSeg(segments) {
         var seg;
         for (var i = 0; i < segments.length; i++) {
             seg = segments[i];
             if (seg.slice(0, 2) == "\xff\xe1" &&
-                   seg.slice(4, 10) == "Exif\x00\x00") {
+                seg.slice(4, 10) == "Exif\x00\x00") {
                 return seg;
             }
         }
         return null;
     }
-
-
     function mergeSegments(segments, exif) {
         var hasExifSegment = false;
         var additionalAPP1ExifSegments = [];
-
-        segments.forEach(function(segment, i) {
+        segments.forEach(function (segment, i) {
             // Replace first occurence of APP1:Exif segment
             if (segment.slice(0, 2) == "\xff\xe1" &&
-                segment.slice(4, 10) == "Exif\x00\x00"
-            ) {
+                segment.slice(4, 10) == "Exif\x00\x00") {
                 if (!hasExifSegment) {
                     segments[i] = exif;
                     hasExifSegment = true;
-                } else {
+                }
+                else {
                     additionalAPP1ExifSegments.unshift(i);
                 }
             }
         });
-
         // Remove additional occurences of APP1:Exif segment
-        additionalAPP1ExifSegments.forEach(function(segmentIndex) {
+        additionalAPP1ExifSegments.forEach(function (segmentIndex) {
             segments.splice(segmentIndex, 1);
         });
-
         if (!hasExifSegment && exif) {
             segments = [segments[0], exif].concat(segments.slice(1));
         }
-
         return segments.join("");
     }
-
-
     function toHex(str) {
         var hexStr = "";
         for (var i = 0; i < str.length; i++) {
@@ -968,8 +883,6 @@ SOFTWARE.
         }
         return hexStr;
     }
-
-
     var TYPES = {
         "Byte": 1,
         "Ascii": 2,
@@ -980,8 +893,6 @@ SOFTWARE.
         "SLong": 9,
         "SRational": 10
     };
-
-
     var TAGS = {
         'Image': {
             11: {
@@ -2143,341 +2054,328 @@ SOFTWARE.
     TAGS["0th"] = TAGS["Image"];
     TAGS["1st"] = TAGS["Image"];
     that.TAGS = TAGS;
-
-    
     that.ImageIFD = {
-        ProcessingSoftware:11,
-        NewSubfileType:254,
-        SubfileType:255,
-        ImageWidth:256,
-        ImageLength:257,
-        BitsPerSample:258,
-        Compression:259,
-        PhotometricInterpretation:262,
-        Threshholding:263,
-        CellWidth:264,
-        CellLength:265,
-        FillOrder:266,
-        DocumentName:269,
-        ImageDescription:270,
-        Make:271,
-        Model:272,
-        StripOffsets:273,
-        Orientation:274,
-        SamplesPerPixel:277,
-        RowsPerStrip:278,
-        StripByteCounts:279,
-        XResolution:282,
-        YResolution:283,
-        PlanarConfiguration:284,
-        GrayResponseUnit:290,
-        GrayResponseCurve:291,
-        T4Options:292,
-        T6Options:293,
-        ResolutionUnit:296,
-        TransferFunction:301,
-        Software:305,
-        DateTime:306,
-        Artist:315,
-        HostComputer:316,
-        Predictor:317,
-        WhitePoint:318,
-        PrimaryChromaticities:319,
-        ColorMap:320,
-        HalftoneHints:321,
-        TileWidth:322,
-        TileLength:323,
-        TileOffsets:324,
-        TileByteCounts:325,
-        SubIFDs:330,
-        InkSet:332,
-        InkNames:333,
-        NumberOfInks:334,
-        DotRange:336,
-        TargetPrinter:337,
-        ExtraSamples:338,
-        SampleFormat:339,
-        SMinSampleValue:340,
-        SMaxSampleValue:341,
-        TransferRange:342,
-        ClipPath:343,
-        XClipPathUnits:344,
-        YClipPathUnits:345,
-        Indexed:346,
-        JPEGTables:347,
-        OPIProxy:351,
-        JPEGProc:512,
-        JPEGInterchangeFormat:513,
-        JPEGInterchangeFormatLength:514,
-        JPEGRestartInterval:515,
-        JPEGLosslessPredictors:517,
-        JPEGPointTransforms:518,
-        JPEGQTables:519,
-        JPEGDCTables:520,
-        JPEGACTables:521,
-        YCbCrCoefficients:529,
-        YCbCrSubSampling:530,
-        YCbCrPositioning:531,
-        ReferenceBlackWhite:532,
-        XMLPacket:700,
-        Rating:18246,
-        RatingPercent:18249,
-        ImageID:32781,
-        CFARepeatPatternDim:33421,
-        CFAPattern:33422,
-        BatteryLevel:33423,
-        Copyright:33432,
-        ExposureTime:33434,
-        ImageResources:34377,
-        ExifTag:34665,
-        InterColorProfile:34675,
-        GPSTag:34853,
-        Interlace:34857,
-        TimeZoneOffset:34858,
-        SelfTimerMode:34859,
-        FlashEnergy:37387,
-        SpatialFrequencyResponse:37388,
-        Noise:37389,
-        FocalPlaneXResolution:37390,
-        FocalPlaneYResolution:37391,
-        FocalPlaneResolutionUnit:37392,
-        ImageNumber:37393,
-        SecurityClassification:37394,
-        ImageHistory:37395,
-        ExposureIndex:37397,
-        TIFFEPStandardID:37398,
-        SensingMethod:37399,
-        XPTitle:40091,
-        XPComment:40092,
-        XPAuthor:40093,
-        XPKeywords:40094,
-        XPSubject:40095,
-        PrintImageMatching:50341,
-        DNGVersion:50706,
-        DNGBackwardVersion:50707,
-        UniqueCameraModel:50708,
-        LocalizedCameraModel:50709,
-        CFAPlaneColor:50710,
-        CFALayout:50711,
-        LinearizationTable:50712,
-        BlackLevelRepeatDim:50713,
-        BlackLevel:50714,
-        BlackLevelDeltaH:50715,
-        BlackLevelDeltaV:50716,
-        WhiteLevel:50717,
-        DefaultScale:50718,
-        DefaultCropOrigin:50719,
-        DefaultCropSize:50720,
-        ColorMatrix1:50721,
-        ColorMatrix2:50722,
-        CameraCalibration1:50723,
-        CameraCalibration2:50724,
-        ReductionMatrix1:50725,
-        ReductionMatrix2:50726,
-        AnalogBalance:50727,
-        AsShotNeutral:50728,
-        AsShotWhiteXY:50729,
-        BaselineExposure:50730,
-        BaselineNoise:50731,
-        BaselineSharpness:50732,
-        BayerGreenSplit:50733,
-        LinearResponseLimit:50734,
-        CameraSerialNumber:50735,
-        LensInfo:50736,
-        ChromaBlurRadius:50737,
-        AntiAliasStrength:50738,
-        ShadowScale:50739,
-        DNGPrivateData:50740,
-        MakerNoteSafety:50741,
-        CalibrationIlluminant1:50778,
-        CalibrationIlluminant2:50779,
-        BestQualityScale:50780,
-        RawDataUniqueID:50781,
-        OriginalRawFileName:50827,
-        OriginalRawFileData:50828,
-        ActiveArea:50829,
-        MaskedAreas:50830,
-        AsShotICCProfile:50831,
-        AsShotPreProfileMatrix:50832,
-        CurrentICCProfile:50833,
-        CurrentPreProfileMatrix:50834,
-        ColorimetricReference:50879,
-        CameraCalibrationSignature:50931,
-        ProfileCalibrationSignature:50932,
-        AsShotProfileName:50934,
-        NoiseReductionApplied:50935,
-        ProfileName:50936,
-        ProfileHueSatMapDims:50937,
-        ProfileHueSatMapData1:50938,
-        ProfileHueSatMapData2:50939,
-        ProfileToneCurve:50940,
-        ProfileEmbedPolicy:50941,
-        ProfileCopyright:50942,
-        ForwardMatrix1:50964,
-        ForwardMatrix2:50965,
-        PreviewApplicationName:50966,
-        PreviewApplicationVersion:50967,
-        PreviewSettingsName:50968,
-        PreviewSettingsDigest:50969,
-        PreviewColorSpace:50970,
-        PreviewDateTime:50971,
-        RawImageDigest:50972,
-        OriginalRawFileDigest:50973,
-        SubTileBlockSize:50974,
-        RowInterleaveFactor:50975,
-        ProfileLookTableDims:50981,
-        ProfileLookTableData:50982,
-        OpcodeList1:51008,
-        OpcodeList2:51009,
-        OpcodeList3:51022,
-        NoiseProfile:51041,
+        ProcessingSoftware: 11,
+        NewSubfileType: 254,
+        SubfileType: 255,
+        ImageWidth: 256,
+        ImageLength: 257,
+        BitsPerSample: 258,
+        Compression: 259,
+        PhotometricInterpretation: 262,
+        Threshholding: 263,
+        CellWidth: 264,
+        CellLength: 265,
+        FillOrder: 266,
+        DocumentName: 269,
+        ImageDescription: 270,
+        Make: 271,
+        Model: 272,
+        StripOffsets: 273,
+        Orientation: 274,
+        SamplesPerPixel: 277,
+        RowsPerStrip: 278,
+        StripByteCounts: 279,
+        XResolution: 282,
+        YResolution: 283,
+        PlanarConfiguration: 284,
+        GrayResponseUnit: 290,
+        GrayResponseCurve: 291,
+        T4Options: 292,
+        T6Options: 293,
+        ResolutionUnit: 296,
+        TransferFunction: 301,
+        Software: 305,
+        DateTime: 306,
+        Artist: 315,
+        HostComputer: 316,
+        Predictor: 317,
+        WhitePoint: 318,
+        PrimaryChromaticities: 319,
+        ColorMap: 320,
+        HalftoneHints: 321,
+        TileWidth: 322,
+        TileLength: 323,
+        TileOffsets: 324,
+        TileByteCounts: 325,
+        SubIFDs: 330,
+        InkSet: 332,
+        InkNames: 333,
+        NumberOfInks: 334,
+        DotRange: 336,
+        TargetPrinter: 337,
+        ExtraSamples: 338,
+        SampleFormat: 339,
+        SMinSampleValue: 340,
+        SMaxSampleValue: 341,
+        TransferRange: 342,
+        ClipPath: 343,
+        XClipPathUnits: 344,
+        YClipPathUnits: 345,
+        Indexed: 346,
+        JPEGTables: 347,
+        OPIProxy: 351,
+        JPEGProc: 512,
+        JPEGInterchangeFormat: 513,
+        JPEGInterchangeFormatLength: 514,
+        JPEGRestartInterval: 515,
+        JPEGLosslessPredictors: 517,
+        JPEGPointTransforms: 518,
+        JPEGQTables: 519,
+        JPEGDCTables: 520,
+        JPEGACTables: 521,
+        YCbCrCoefficients: 529,
+        YCbCrSubSampling: 530,
+        YCbCrPositioning: 531,
+        ReferenceBlackWhite: 532,
+        XMLPacket: 700,
+        Rating: 18246,
+        RatingPercent: 18249,
+        ImageID: 32781,
+        CFARepeatPatternDim: 33421,
+        CFAPattern: 33422,
+        BatteryLevel: 33423,
+        Copyright: 33432,
+        ExposureTime: 33434,
+        ImageResources: 34377,
+        ExifTag: 34665,
+        InterColorProfile: 34675,
+        GPSTag: 34853,
+        Interlace: 34857,
+        TimeZoneOffset: 34858,
+        SelfTimerMode: 34859,
+        FlashEnergy: 37387,
+        SpatialFrequencyResponse: 37388,
+        Noise: 37389,
+        FocalPlaneXResolution: 37390,
+        FocalPlaneYResolution: 37391,
+        FocalPlaneResolutionUnit: 37392,
+        ImageNumber: 37393,
+        SecurityClassification: 37394,
+        ImageHistory: 37395,
+        ExposureIndex: 37397,
+        TIFFEPStandardID: 37398,
+        SensingMethod: 37399,
+        XPTitle: 40091,
+        XPComment: 40092,
+        XPAuthor: 40093,
+        XPKeywords: 40094,
+        XPSubject: 40095,
+        PrintImageMatching: 50341,
+        DNGVersion: 50706,
+        DNGBackwardVersion: 50707,
+        UniqueCameraModel: 50708,
+        LocalizedCameraModel: 50709,
+        CFAPlaneColor: 50710,
+        CFALayout: 50711,
+        LinearizationTable: 50712,
+        BlackLevelRepeatDim: 50713,
+        BlackLevel: 50714,
+        BlackLevelDeltaH: 50715,
+        BlackLevelDeltaV: 50716,
+        WhiteLevel: 50717,
+        DefaultScale: 50718,
+        DefaultCropOrigin: 50719,
+        DefaultCropSize: 50720,
+        ColorMatrix1: 50721,
+        ColorMatrix2: 50722,
+        CameraCalibration1: 50723,
+        CameraCalibration2: 50724,
+        ReductionMatrix1: 50725,
+        ReductionMatrix2: 50726,
+        AnalogBalance: 50727,
+        AsShotNeutral: 50728,
+        AsShotWhiteXY: 50729,
+        BaselineExposure: 50730,
+        BaselineNoise: 50731,
+        BaselineSharpness: 50732,
+        BayerGreenSplit: 50733,
+        LinearResponseLimit: 50734,
+        CameraSerialNumber: 50735,
+        LensInfo: 50736,
+        ChromaBlurRadius: 50737,
+        AntiAliasStrength: 50738,
+        ShadowScale: 50739,
+        DNGPrivateData: 50740,
+        MakerNoteSafety: 50741,
+        CalibrationIlluminant1: 50778,
+        CalibrationIlluminant2: 50779,
+        BestQualityScale: 50780,
+        RawDataUniqueID: 50781,
+        OriginalRawFileName: 50827,
+        OriginalRawFileData: 50828,
+        ActiveArea: 50829,
+        MaskedAreas: 50830,
+        AsShotICCProfile: 50831,
+        AsShotPreProfileMatrix: 50832,
+        CurrentICCProfile: 50833,
+        CurrentPreProfileMatrix: 50834,
+        ColorimetricReference: 50879,
+        CameraCalibrationSignature: 50931,
+        ProfileCalibrationSignature: 50932,
+        AsShotProfileName: 50934,
+        NoiseReductionApplied: 50935,
+        ProfileName: 50936,
+        ProfileHueSatMapDims: 50937,
+        ProfileHueSatMapData1: 50938,
+        ProfileHueSatMapData2: 50939,
+        ProfileToneCurve: 50940,
+        ProfileEmbedPolicy: 50941,
+        ProfileCopyright: 50942,
+        ForwardMatrix1: 50964,
+        ForwardMatrix2: 50965,
+        PreviewApplicationName: 50966,
+        PreviewApplicationVersion: 50967,
+        PreviewSettingsName: 50968,
+        PreviewSettingsDigest: 50969,
+        PreviewColorSpace: 50970,
+        PreviewDateTime: 50971,
+        RawImageDigest: 50972,
+        OriginalRawFileDigest: 50973,
+        SubTileBlockSize: 50974,
+        RowInterleaveFactor: 50975,
+        ProfileLookTableDims: 50981,
+        ProfileLookTableData: 50982,
+        OpcodeList1: 51008,
+        OpcodeList2: 51009,
+        OpcodeList3: 51022,
+        NoiseProfile: 51041,
     };
-
-    
     that.ExifIFD = {
-        ExposureTime:33434,
-        FNumber:33437,
-        ExposureProgram:34850,
-        SpectralSensitivity:34852,
-        ISOSpeedRatings:34855,
-        OECF:34856,
-        SensitivityType:34864,
-        StandardOutputSensitivity:34865,
-        RecommendedExposureIndex:34866,
-        ISOSpeed:34867,
-        ISOSpeedLatitudeyyy:34868,
-        ISOSpeedLatitudezzz:34869,
-        ExifVersion:36864,
-        DateTimeOriginal:36867,
-        DateTimeDigitized:36868,
-        ComponentsConfiguration:37121,
-        CompressedBitsPerPixel:37122,
-        ShutterSpeedValue:37377,
-        ApertureValue:37378,
-        BrightnessValue:37379,
-        ExposureBiasValue:37380,
-        MaxApertureValue:37381,
-        SubjectDistance:37382,
-        MeteringMode:37383,
-        LightSource:37384,
-        Flash:37385,
-        FocalLength:37386,
-        SubjectArea:37396,
-        MakerNote:37500,
-        UserComment:37510,
-        SubSecTime:37520,
-        SubSecTimeOriginal:37521,
-        SubSecTimeDigitized:37522,
-        FlashpixVersion:40960,
-        ColorSpace:40961,
-        PixelXDimension:40962,
-        PixelYDimension:40963,
-        RelatedSoundFile:40964,
-        InteroperabilityTag:40965,
-        FlashEnergy:41483,
-        SpatialFrequencyResponse:41484,
-        FocalPlaneXResolution:41486,
-        FocalPlaneYResolution:41487,
-        FocalPlaneResolutionUnit:41488,
-        SubjectLocation:41492,
-        ExposureIndex:41493,
-        SensingMethod:41495,
-        FileSource:41728,
-        SceneType:41729,
-        CFAPattern:41730,
-        CustomRendered:41985,
-        ExposureMode:41986,
-        WhiteBalance:41987,
-        DigitalZoomRatio:41988,
-        FocalLengthIn35mmFilm:41989,
-        SceneCaptureType:41990,
-        GainControl:41991,
-        Contrast:41992,
-        Saturation:41993,
-        Sharpness:41994,
-        DeviceSettingDescription:41995,
-        SubjectDistanceRange:41996,
-        ImageUniqueID:42016,
-        CameraOwnerName:42032,
-        BodySerialNumber:42033,
-        LensSpecification:42034,
-        LensMake:42035,
-        LensModel:42036,
-        LensSerialNumber:42037,
-        Gamma:42240,
+        ExposureTime: 33434,
+        FNumber: 33437,
+        ExposureProgram: 34850,
+        SpectralSensitivity: 34852,
+        ISOSpeedRatings: 34855,
+        OECF: 34856,
+        SensitivityType: 34864,
+        StandardOutputSensitivity: 34865,
+        RecommendedExposureIndex: 34866,
+        ISOSpeed: 34867,
+        ISOSpeedLatitudeyyy: 34868,
+        ISOSpeedLatitudezzz: 34869,
+        ExifVersion: 36864,
+        DateTimeOriginal: 36867,
+        DateTimeDigitized: 36868,
+        ComponentsConfiguration: 37121,
+        CompressedBitsPerPixel: 37122,
+        ShutterSpeedValue: 37377,
+        ApertureValue: 37378,
+        BrightnessValue: 37379,
+        ExposureBiasValue: 37380,
+        MaxApertureValue: 37381,
+        SubjectDistance: 37382,
+        MeteringMode: 37383,
+        LightSource: 37384,
+        Flash: 37385,
+        FocalLength: 37386,
+        SubjectArea: 37396,
+        MakerNote: 37500,
+        UserComment: 37510,
+        SubSecTime: 37520,
+        SubSecTimeOriginal: 37521,
+        SubSecTimeDigitized: 37522,
+        FlashpixVersion: 40960,
+        ColorSpace: 40961,
+        PixelXDimension: 40962,
+        PixelYDimension: 40963,
+        RelatedSoundFile: 40964,
+        InteroperabilityTag: 40965,
+        FlashEnergy: 41483,
+        SpatialFrequencyResponse: 41484,
+        FocalPlaneXResolution: 41486,
+        FocalPlaneYResolution: 41487,
+        FocalPlaneResolutionUnit: 41488,
+        SubjectLocation: 41492,
+        ExposureIndex: 41493,
+        SensingMethod: 41495,
+        FileSource: 41728,
+        SceneType: 41729,
+        CFAPattern: 41730,
+        CustomRendered: 41985,
+        ExposureMode: 41986,
+        WhiteBalance: 41987,
+        DigitalZoomRatio: 41988,
+        FocalLengthIn35mmFilm: 41989,
+        SceneCaptureType: 41990,
+        GainControl: 41991,
+        Contrast: 41992,
+        Saturation: 41993,
+        Sharpness: 41994,
+        DeviceSettingDescription: 41995,
+        SubjectDistanceRange: 41996,
+        ImageUniqueID: 42016,
+        CameraOwnerName: 42032,
+        BodySerialNumber: 42033,
+        LensSpecification: 42034,
+        LensMake: 42035,
+        LensModel: 42036,
+        LensSerialNumber: 42037,
+        Gamma: 42240,
     };
-
-
     that.GPSIFD = {
-        GPSVersionID:0,
-        GPSLatitudeRef:1,
-        GPSLatitude:2,
-        GPSLongitudeRef:3,
-        GPSLongitude:4,
-        GPSAltitudeRef:5,
-        GPSAltitude:6,
-        GPSTimeStamp:7,
-        GPSSatellites:8,
-        GPSStatus:9,
-        GPSMeasureMode:10,
-        GPSDOP:11,
-        GPSSpeedRef:12,
-        GPSSpeed:13,
-        GPSTrackRef:14,
-        GPSTrack:15,
-        GPSImgDirectionRef:16,
-        GPSImgDirection:17,
-        GPSMapDatum:18,
-        GPSDestLatitudeRef:19,
-        GPSDestLatitude:20,
-        GPSDestLongitudeRef:21,
-        GPSDestLongitude:22,
-        GPSDestBearingRef:23,
-        GPSDestBearing:24,
-        GPSDestDistanceRef:25,
-        GPSDestDistance:26,
-        GPSProcessingMethod:27,
-        GPSAreaInformation:28,
-        GPSDateStamp:29,
-        GPSDifferential:30,
-        GPSHPositioningError:31,
+        GPSVersionID: 0,
+        GPSLatitudeRef: 1,
+        GPSLatitude: 2,
+        GPSLongitudeRef: 3,
+        GPSLongitude: 4,
+        GPSAltitudeRef: 5,
+        GPSAltitude: 6,
+        GPSTimeStamp: 7,
+        GPSSatellites: 8,
+        GPSStatus: 9,
+        GPSMeasureMode: 10,
+        GPSDOP: 11,
+        GPSSpeedRef: 12,
+        GPSSpeed: 13,
+        GPSTrackRef: 14,
+        GPSTrack: 15,
+        GPSImgDirectionRef: 16,
+        GPSImgDirection: 17,
+        GPSMapDatum: 18,
+        GPSDestLatitudeRef: 19,
+        GPSDestLatitude: 20,
+        GPSDestLongitudeRef: 21,
+        GPSDestLongitude: 22,
+        GPSDestBearingRef: 23,
+        GPSDestBearing: 24,
+        GPSDestDistanceRef: 25,
+        GPSDestDistance: 26,
+        GPSProcessingMethod: 27,
+        GPSAreaInformation: 28,
+        GPSDateStamp: 29,
+        GPSDifferential: 30,
+        GPSHPositioningError: 31,
     };
-
-
     that.InteropIFD = {
-        InteroperabilityIndex:1,
+        InteroperabilityIndex: 1,
     };
-
     that.GPSHelper = {
-        degToDmsRational:function (degFloat) {
+        degToDmsRational: function (degFloat) {
             var degAbs = Math.abs(degFloat);
             var minFloat = degAbs % 1 * 60;
             var secFloat = minFloat % 1 * 60;
             var deg = Math.floor(degAbs);
             var min = Math.floor(minFloat);
             var sec = Math.round(secFloat * 100);
-
             return [[deg, 1], [min, 1], [sec, 100]];
         },
-
-        dmsRationalToDeg:function (dmsArray, ref) {
+        dmsRationalToDeg: function (dmsArray, ref) {
             var sign = (ref === 'S' || ref === 'W') ? -1.0 : 1.0;
             var deg = dmsArray[0][0] / dmsArray[0][1] +
-                      dmsArray[1][0] / dmsArray[1][1] / 60.0 +
-                      dmsArray[2][0] / dmsArray[2][1] / 3600.0;
-
+                dmsArray[1][0] / dmsArray[1][1] / 60.0 +
+                dmsArray[2][0] / dmsArray[2][1] / 3600.0;
             return deg * sign;
         }
     };
-    
-    
     if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports) {
             exports = module.exports = that;
         }
         exports.piexif = that;
-    } else {
+    }
+    else {
         window.piexif = that;
     }
-
 })();
+//# sourceMappingURL=piexif.js.map
