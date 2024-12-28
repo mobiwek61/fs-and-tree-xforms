@@ -26,27 +26,26 @@ const DEST_MINI = DEST_ROOT + '/miniSize'
 // in VSCode, to get interactive terminal, launch.json must have this ->      "console": "integratedTerminal",
 var DRY_RUN=true;
 showFullCommandLine()
-if (yargsCmds.DRY_RUN != 'true') {  // set this way when developing ie VSCode
-    console.log(BRIGHTRED + 'Enter \"y\" to create files & folders. Otherwise does dry run.'  + COLRESET)
-    var mat:any = readlineSync.question().match(/^(y|Y)$/) // ^ is start, match y or Y then end of string
-    DRY_RUN = mat ? false : true
-} 
 console.log('proceeding with DRY_RUN=' + DRY_RUN);
+//TestPie();  return;
+console.log(BRIGHTRED + 'Be sure to transpile *.ts to *.js before running: \n' +
+  '   ../node_modules/typescript/bin/tsc --project tsconfig_dogs.json --watch' + COLRESET
+)
+console.log('This javascript, \"' + BRIGHTYELLOW + path.relative( process.cwd(), process.argv[1])  + COLRESET + 
+  '\" Recursively copies\n    source folder to subfolder (fixed value): '+ BRIGHTYELLOW + DEST_ROOT + COLRESET + 
+  '.\n    Usage:  ' + BRIGHTYELLOW + 'node.exe compiledJS/imagesTreeCopyNResize.js --imgSrcFolder ../public/jpeg' + 
+  ' --PIXFULL 444 --PIXMINI 88 ' + COLRESET)
+if (!yargsCmds.imgSrcFolder) { console.log('imgSrcFolder not specified. Quitting. '); process.exit(); }
+if (!yargsCmds.PIXFULL || !yargsCmds.PIXMINI) { console.log('PIXFULL or PIXMINI not specified. Quitting. '); process.exit(); }
+if (yargsCmds.DRY_RUN != 'true') {  // set this way when developing ie VSCode
+  console.log(BRIGHTRED + 'Enter \"y\" to create files & folders. Otherwise does dry run.'  + COLRESET)
+  var mat:any = readlineSync.question().match(/^(y|Y)$/) // ^ is start, match y or Y then end of string
+  DRY_RUN = mat ? false : true
+} 
 runIt()
 console.log(BRIGHTYELLOW + 'DONE with DRY_RUN=' + DRY_RUN);
 
 function runIt() {  // read in existing picture metadata (ie: caption) and add if necessary if file was added or name change
-  //TestPie();  return;
-  console.log(BRIGHTRED + 'Be sure to transpile *.ts to *.js before running: \n' +
-    '   ../node_modules/typescript/bin/tsc --project tsconfig_dogs.json --watch' + COLRESET
-  )
-  
-  console.log(BRIGHTYELLOW + 'Recursively copies source folder to subfolder: ' + DEST_ROOT + 
-    '.\n   Usage: ' + 'node.exe compiledJS/imagesTreeCopyNResize.js --imgSrcFolder ../public/jpeg' + 
-    ' --PIXFULL 444 --PIXMINI 88 ' + COLRESET)
-  if (!yargsCmds.imgSrcFolder) { console.log('imgSrcFolder not specified. Quitting. '); process.exit(); }
-  if (!yargsCmds.PIXFULL || !yargsCmds.PIXMINI) { console.log('PIXFULL or PIXMINI not specified. Quitting. '); process.exit(); }
-
   if (!fsPkg.existsSync(DEST_ROOT)) {
       console.log(BRIGHTRED + 'folder \"' + DEST_ROOT + '\" must exist. \nTo enforce only down-tree writes for safety reasons.\n' +
         'Exiting' ); process.exit()
