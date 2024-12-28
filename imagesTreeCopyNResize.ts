@@ -21,6 +21,8 @@ const RESIZE_PX_FULL=887
 const RESIZE_PX_MINI=88
 /** destination of resized images. Cannot begin with / or have ..   */
 const DEST_ROOT = 'outputFiles/xformedImgs'
+const DEST_FULL = DEST_ROOT + '/fullsize/jpeg'
+const DEST_MINI = DEST_ROOT + '/miniSize/jpeg'
 // in VSCode, to get interactive terminal, launch.json must have this ->      "console": "integratedTerminal",
 var DRY_RUN=true;
 showFullCommandLine()
@@ -50,8 +52,8 @@ function runIt() {  // read in existing picture metadata (ie: caption) and add i
         'Exiting' ); process.exit()
   }
   if (!DRY_RUN) { 
-    fsPkg.mkdirSync(DEST_ROOT + '/fullSize/jpeg', { recursive: true });
-    fsPkg.mkdirSync(DEST_ROOT + '/miniSize/jpeg', { recursive: true });
+    fsPkg.mkdirSync(DEST_FULL, { recursive: true });
+    fsPkg.mkdirSync(DEST_MINI, { recursive: true });
   }
   copyFoldersWithMods(yargsCmds.imgSrcFolder, 'outputFiles/newImageTree/', !DRY_RUN)
 }
@@ -122,6 +124,7 @@ function showFullCommandLine() { var outstr=' '; process.argv.forEach((val, inde
 
 
 /* trash
+/////////////////////////////////
 TRASH TRASH TRASH TRASH TRASH TRASH TRASH TRASH TRASH TRASH TRASH TRASH  
 const allShrunk = twoLists.metaList.lookup.map((mEntry:any) => {
     const srcFilePath = mEntry.mwmkey
