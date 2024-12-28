@@ -1,5 +1,9 @@
 /* eslint-disable no-undef */
-
+/**
+ * Recursively copies directories. Any jpeg files get converted to standard size and mini size.
+ * Fun with recursion, folder traversal, regex.
+ * Special precautions make copy only to subdirectories of current, to prevent placement of stuff where it doesn't belong.
+ */
 import { system } from "systeminformation";
 import { ResizeImage, examineEXIF } from "./ImageProcHelper"
 const path = require('path');
