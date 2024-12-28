@@ -17,8 +17,8 @@ const yargsCmds = yargs(hideBin(process.argv)).argv
 const BRIGHTRED='\x1b[91m' // see showAsciiColors.js
 const BRIGHTYELLOW='\x1b[93m';const BRIGHTGREEN='\x1b[92m';const COLRESET='\x1b[0m';const WHITE='\x1b[37m'; const REDBACKGRND='\x1b[41m'
 /** pixel size to resize images, full scale image */
-const RESIZE_PX_FULL=887
-const RESIZE_PX_MINI=88
+const RESIZE_PX_FULL=yargsCmds.PIXFULL
+const RESIZE_PX_MINI=yargsCmds.PIXMINI
 /** destination of resized images. Cannot begin with / or have ..   */
 const DEST_ROOT = 'outputFiles/xformedImgs'
 const DEST_FULL = DEST_ROOT + '/fullsize'
@@ -31,9 +31,7 @@ if (yargsCmds.DRY_RUN != 'true') {  // set this way when developing ie VSCode
     var mat:any = readlineSync.question().match(/^(y|Y)$/) // ^ is start, match y or Y then end of string
     DRY_RUN = mat ? false : true
 } 
-//DRY_RUN=true
 console.log('proceeding with DRY_RUN=' + DRY_RUN);
-//process.exit()
 runIt()
 console.log(BRIGHTYELLOW + 'DONE with DRY_RUN=' + DRY_RUN);
 
@@ -44,8 +42,10 @@ function runIt() {  // read in existing picture metadata (ie: caption) and add i
   )
   
   console.log(BRIGHTYELLOW + 'Recursively copies source folder to subfolder: ' + DEST_ROOT + 
-    '.\n   Usage: ' + 'node.exe compiledJS/imagesTreeCopyNResize.js --imgSrcFolder ../public/jpeg' + COLRESET)
+    '.\n   Usage: ' + 'node.exe compiledJS/imagesTreeCopyNResize.js --imgSrcFolder ../public/jpeg' + 
+    ' --PIXFULL 444 --PIXMINI 88 ' + COLRESET)
   if (!yargsCmds.imgSrcFolder) { console.log('imgSrcFolder not specified. Quitting. '); process.exit(); }
+  if (!yargsCmds.PIXFULL || !yargsCmds.PIXMINI) { console.log('PIXFULL or PIXMINI not specified. Quitting. '); process.exit(); }
 
   if (!fsPkg.existsSync(DEST_ROOT)) {
       console.log(BRIGHTRED + 'folder \"' + DEST_ROOT + '\" must exist. \nTo enforce only down-tree writes for safety reasons.\n' +
@@ -256,8 +256,9 @@ readAJSON('./public/jpeg').then(theArr => {
         // without cwd ->  "program": "${workspaceFolder}\\menuBuilder\\compiledJS\\fileListToMenuSpec_metaData.js",
         "program": "compiledJS/imagesTreeCopyNResize.js",
         "args": [
-          "--imgSrcFolder", "./origJPEG",
-          //"--DRY_RUN", "false" // this disables interactive verification prompt
+          "--imgSrcFolder", "./origJPEG/jpeg",
+          "--PIXMINI", "99", "--PIXFULL", "446"
+          //"--DRY_RUN", "true" // this disables interactive verification prompt
           // slick but sloppy ->    "{ \"imgFolder\":\"./public/jpeg\", \"menuOut\":\"menuBuilder/output/outMenuFile.json\", \"pictureMetaFile\":\"menuBuilder/metaDataEdited//pictureMetaData.json\" }"
         ]
       }
