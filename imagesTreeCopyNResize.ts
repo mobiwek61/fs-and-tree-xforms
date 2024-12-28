@@ -49,8 +49,8 @@ function runIt() {  // read in existing picture metadata (ie: caption) and add i
         'Exiting' ); process.exit()
   }
   if (!DRY_RUN) { 
-    fsPkg.mkdirSync('outputFiles/' + DEST_ROOT + '/fullSize/jpeg', { recursive: true });
-    fsPkg.mkdirSync('outputFiles/' + DEST_ROOT + '/miniSize/jpeg', { recursive: true });
+    fsPkg.mkdirSync(DEST_ROOT + '/fullSize/jpeg', { recursive: true });
+    fsPkg.mkdirSync(DEST_ROOT + '/miniSize/jpeg', { recursive: true });
   }
   recurseFolders(yargsCmds.imgSrcFolder, yargsCmds.imgSrcFolder, 'outputFiles/newImageTree/', !DRY_RUN)
 }
@@ -60,10 +60,6 @@ function runIt() {  // read in existing picture metadata (ie: caption) and add i
  * after some tinkering...
  */
 function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destinationRootDir: string, LIVE_RUN: boolean) { 
-  if ( destinationRootDir.match(/^(\.\.|\/|\\).*/) ) {
-      console.log('destinationRootDir cannot start with these: / \\ .. because this creates directories and files and its dangerous to do this except in subdirectories.')
-      process.exit()
-    }
   const files = fsPkg.readdirSync(srcDirRecurseLevel, { withFileTypes: true }); 
   files.forEach((fileOrDir:any) => {
       // the excellent "digikam" photo organizing app leaves   .dtrash,   digikam.uuid
@@ -77,6 +73,10 @@ function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destina
       // destPath_fullSize = destPath_fullSize + DEST_ROOT
       // var sourcePath = srcDirRecurseLevel.replace(/\.*?\/{srcRootPath}\//, '') // remove original root
       
+      if ( destinationRootDir.match(/^(\.\.|\/|\\).*/) ) {
+        console.log('destinationRootDir cannot start with these: / \\ .. because this creates directories and files and its dangerous to do this except in subdirectories.')
+        process.exit()
+      }
       if (destPath_fullSize.match(/.*\.\..*/)) {
           console.log(REDBACKGRND + WHITE + 'Double dot .. detected in destination file.\n   Not allowed for safety reasons! \n   Only downtree writes allowed!')
           process.exit()
