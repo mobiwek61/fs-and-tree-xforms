@@ -73,7 +73,8 @@ function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destina
         return // ignore ! the excellent "digikam" photo organizing app leaves   .dtrash,   digikam.uuid
       const sourcePath = srcDirRecurseLevel + '/' + fileOrDir.name 
       const regex = new RegExp(srcRootPath, 'g'); // for './origJPEG', this escapes slash and gives regex value ->    /.\/origJPEG/g
-      var destPath_fullSize = sourcePath.replace(regex, DEST_ROOT) // remove original root
+      var destPath_fullSize = sourcePath.replace(regex, DEST_FULL) // remove original root
+      var destPath_miniSize = sourcePath.replace(regex, DEST_MINI) 
       checkForUnsafeFilePaths(destPath_fullSize);
 
       if (fileOrDir.isDirectory()) {
@@ -82,11 +83,12 @@ function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destina
           BRIGHTRED +  destPath_fullSize)
         if (LIVE_RUN) {
           if (!fsPkg.existsSync(destPath_fullSize)) fsPkg.mkdirSync(destPath_fullSize, { recursive: false });
+          if (!fsPkg.existsSync(destPath_miniSize)) fsPkg.mkdirSync(destPath_miniSize, { recursive: false });
         }
         recurseFolders(sourcePath, srcRootPath, destinationRootDir, LIVE_RUN)
       } else {
         console.log(BRIGHTGREEN + 'jpeg: ' + COLRESET + '\nsource:      ' + BRIGHTRED + sourcePath + COLRESET + '\ndest: ' +
-          BRIGHTRED +  destPath_fullSize)
+          BRIGHTRED +  destPath_fullSize + '\n      ' + destPath_miniSize) 
         if (LIVE_RUN) {
           if (!sourcePath.match(/.*(\.jpg|\.JPG|\.jpeg|\.JPEG)/)) {
               console.log('not image, copying file ' + sourcePath)
@@ -94,6 +96,7 @@ function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destina
           } else {
               fsPkg.writeFileSync(destPath_fullSize, 'test content', 'utf8');
               ResizeImage(sourcePath, RESIZE_PX_FULL, destPath_fullSize)
+              ResizeImage(sourcePath, RESIZE_PX_MINI, destPath_miniSize)
               console.log('resized')
           }
         }
@@ -101,7 +104,7 @@ function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destina
   })
 }
 
-function checkForUnsafeFilePaths(str) {
+function checkForUnsafeFilePaths(str:any) {
   // let word = "bar"; let regex = new RegExp(`foo|${word}`, "i"    backtics
   const slashesNdots = new RegExp(/^\/.*|^\\.*|.*\.\..*/)
   // //SAVE for testing regex  
