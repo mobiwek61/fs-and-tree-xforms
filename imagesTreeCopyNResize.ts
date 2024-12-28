@@ -4,7 +4,7 @@
  * Fun with recursion, folder traversal, regex.
  * Special precautions make copy only to subdirectories of current, to prevent placement of stuff where it doesn't belong.
  */
-import { system } from "systeminformation";
+// import { system } from "systeminformation";
 import { ResizeImage, examineEXIF } from "./ImageProcHelper"
 const path = require('path');
 var readlineSync = require('readline-sync');
@@ -15,11 +15,7 @@ const { hideBin } = require('yargs/helpers')
 const yargsCmds = yargs(hideBin(process.argv)).argv
 // %c	Applies CSS style rules from second argument to console.log in browser not bash
 const BRIGHTRED='\x1b[91m' // see showAsciiColors.js
-const BRIGHTYELLOW='\x1b[93m'
-const BRIGHTGREEN='\x1b[92m'
-const COLRESET='\x1b[0m'
-const WHITE='\x1b[37m'; const REDBACKGRND='\x1b[41m'
- 
+const BRIGHTYELLOW='\x1b[93m';const BRIGHTGREEN='\x1b[92m';const COLRESET='\x1b[0m';const WHITE='\x1b[37m'; const REDBACKGRND='\x1b[41m'
 /** pixel size to resize images, full scale image */
 const RESIZE_PX_FULL=887
 const RESIZE_PX_MINI=88
@@ -28,7 +24,7 @@ const DEST_ROOT = 'outputFiles/xformedImgs'
 // in VSCode, to get interactive terminal, launch.json must have this ->      "console": "integratedTerminal",
 var DRY_RUN=true;
 showFullCommandLine()
-if (yargsCmds.DRY_RUN != 'false') {  // set this way when developing ie VSCode
+if (yargsCmds.DRY_RUN != 'true') {  // set this way when developing ie VSCode
     console.log(BRIGHTRED + 'Enter \"y\" to create files & folders. Otherwise does dry run.'  + COLRESET)
     var mat:any = readlineSync.question().match(/^(y|Y)$/) // ^ is start, match y or Y then end of string
     DRY_RUN = mat ? false : true
@@ -44,10 +40,11 @@ function runIt() {  // read in existing picture metadata (ie: caption) and add i
   console.log(BRIGHTRED + 'Be sure to transpile *.ts to *.js before running: \n' +
     '   ../node_modules/typescript/bin/tsc --project tsconfig_dogs.json --watch' + COLRESET
   )
-  //if (!yargsCmds.imgSrcFolder) {
-    console.log('Usage: \n' + BRIGHTYELLOW + 'node.exe compiledJS/imagesTreeCopyNResize.js --imgSrcFolder ../public/jpeg')
-  //  return
-  //}
+  
+  console.log(BRIGHTYELLOW + 'Recursively copies source folder to subfolder: ' + DEST_ROOT + 
+    '.\n   Usage: ' + 'node.exe compiledJS/imagesTreeCopyNResize.js --imgSrcFolder ../public/jpeg' + COLRESET)
+  if (!yargsCmds.imgSrcFolder) { console.log('imgSrcFolder not specified. Quitting. '); process.exit(); }
+
   if (!fsPkg.existsSync(DEST_ROOT)) {
       console.log(BRIGHTRED + 'folder \"' + DEST_ROOT + '\" must exist. \nTo enforce only down-tree writes for safety reasons.\n' +
         'Exiting' ); process.exit()
@@ -75,15 +72,8 @@ function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destina
       const sourcePath = srcDirRecurseLevel + '/' + fileOrDir.name 
       const regex = new RegExp(srcRootPath, 'g'); // for './origJPEG', this escapes slash and gives regex value ->    /.\/origJPEG/g
       var destPath_fullSize = sourcePath.replace(regex, DEST_ROOT) // remove original root
-      // var sourcePath = srcDirRecurseLevel.replace(/\.*?\/{srcRootPath}\//, '') // remove original root
-      if ( destinationRootDir.match(/^(\.\.|\/|\\).*/) ) {
-        console.log('destinationRootDir cannot start with these: / \\ .. because this creates directories and files and its dangerous to do this except in subdirectories.')
-        process.exit()
-      }
-      if (destPath_fullSize.match(/.*\.\..*/)) {
-          console.log(REDBACKGRND + WHITE + 'Double dot .. detected in destination file.\n   Not allowed for safety reasons! \n   Only downtree writes allowed!')
-          process.exit()
-      }
+      checkForUnsafeFilePaths(destPath_fullSize);
+
       if (fileOrDir.isDirectory()) {
         // call new recursion and push() it onto existing list
         console.log(BRIGHTGREEN + 'Directory: ' + COLRESET + '\nsource:      ' + BRIGHTRED + sourcePath + COLRESET + '\ndest: ' +
@@ -109,8 +99,24 @@ function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destina
   })
 }
 
-function showFullCommandLine() { var outstr=''; process.argv.forEach((val, index) => {
-  if (index == 1) outstr += path.relative( process.cwd(), val) ; // val is absolute path, so convert to relative
+function checkForUnsafeFilePaths(str) {
+  // let word = "bar"; let regex = new RegExp(`foo|${word}`, "i"    backtics
+  const slashesNdots = new RegExp(/^\/.*|^\\.*|.*\.\..*/)
+  // //SAVE for testing regex  
+  //   console.log(slashesNdots.test('afew/waefw') + '  string: ' + 'afew/waefw')
+  //   console.log(slashesNdots.test('/afew/waefw') + '  string: ' + '/afew/waefw')
+  //   console.log(slashesNdots.test('\\afew/waefw') + '  string: ' + '\\afew/waefw')
+  //   console.log(slashesNdots.test('afew/../waefw') + '  string: ' + 'afew/../waefw')
+  //   console.log(slashesNdots.test('/afew/../waefw') + '  string: ' + '/afew/../waefw')
+  //   str = 'afew/../waefw'
+  if (slashesNdots.test(str)) {
+    console.log('destination cannot start with / or \\ or contain 2 dots .. anywhere. Prevents inserting files into system areas.')
+    process.exit()
+  }
+}
+
+function showFullCommandLine() { var outstr=' '; process.argv.forEach((val, index) => {
+  if (index == 1) outstr += path.relative( process.cwd(), val) + ' ' ; // val is absolute path, so convert to relative
   if (index > 1) outstr += `${val}  `;}); console.log('command line: ' + BRIGHTYELLOW + outstr)}
 
 
