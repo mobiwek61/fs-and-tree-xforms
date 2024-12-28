@@ -1,10 +1,10 @@
 # updated 04-04-2024b
 # for image reducer
 trash*.jpeg
-*.jpg
-*.jpeg
-*.JPG
-*.JPEG
+# *.jpg
+# *.jpeg
+# *.JPG
+# *.JPEG
 **/outputFiles/newImageTree/*
 **/outputFiles/miniImages/*
 **/outputFiles/baks/*
