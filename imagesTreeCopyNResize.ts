@@ -5,7 +5,7 @@ import { ResizeImage, examineEXIF } from "./ImageProcHelper"
 const path = require('path');
 var readlineSync = require('readline-sync');
 const fsPkg = require('fs'); // syntax from node js file running with node
-var jsonpath = require('jsonpath');
+// var jsonpath = require('jsonpath');
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const yargsCmds = yargs(hideBin(process.argv)).argv
@@ -52,9 +52,13 @@ function runIt() {  // read in existing picture metadata (ie: caption) and add i
     fsPkg.mkdirSync(DEST_ROOT + '/fullSize/jpeg', { recursive: true });
     fsPkg.mkdirSync(DEST_ROOT + '/miniSize/jpeg', { recursive: true });
   }
-  recurseFolders(yargsCmds.imgSrcFolder, yargsCmds.imgSrcFolder, 'outputFiles/newImageTree/', !DRY_RUN)
+  copyFoldersWithMods(yargsCmds.imgSrcFolder, 'outputFiles/newImageTree/', !DRY_RUN)
 }
 
+
+function copyFoldersWithMods(srcRootPath: string, destinationRootDir: string, LIVE_RUN: boolean) { 
+    recurseFolders(srcRootPath, srcRootPath, destinationRootDir, LIVE_RUN) 
+}
 /**
  * When a BRANCH is encountered, it recurses to create an array for it. Somehow it all works
  * after some tinkering...
@@ -62,17 +66,12 @@ function runIt() {  // read in existing picture metadata (ie: caption) and add i
 function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destinationRootDir: string, LIVE_RUN: boolean) { 
   const files = fsPkg.readdirSync(srcDirRecurseLevel, { withFileTypes: true }); 
   files.forEach((fileOrDir:any) => {
-      // the excellent "digikam" photo organizing app leaves   .dtrash,   digikam.uuid
       if (fileOrDir.name.match(/.*dtrash.*/)) 
-        return // ignore !
+        return // ignore ! the excellent "digikam" photo organizing app leaves   .dtrash,   digikam.uuid
       const sourcePath = srcDirRecurseLevel + '/' + fileOrDir.name 
-      // const destPath_fullSize = destinationRootDir + 'fullSize/' + sourcePath.replace(/\.*?\/public\//, '') // trim "../public" 
-      
-      const regex = new RegExp(srcRootPath, 'g');
-      var destPath_fullSize = sourcePath.replace(srcRootPath, DEST_ROOT) // remove original root
-      // destPath_fullSize = destPath_fullSize + DEST_ROOT
+      const regex = new RegExp(srcRootPath, 'g'); // for './origJPEG', this escapes slash and gives regex value ->    /.\/origJPEG/g
+      var destPath_fullSize = sourcePath.replace(regex, DEST_ROOT) // remove original root
       // var sourcePath = srcDirRecurseLevel.replace(/\.*?\/{srcRootPath}\//, '') // remove original root
-      
       if ( destinationRootDir.match(/^(\.\.|\/|\\).*/) ) {
         console.log('destinationRootDir cannot start with these: / \\ .. because this creates directories and files and its dangerous to do this except in subdirectories.')
         process.exit()
