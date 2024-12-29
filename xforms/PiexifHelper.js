@@ -52,24 +52,33 @@ const TestPie2 = (fileName) => {
         var jpegData = fs.readFileSync(fileName, 'binary');
         // var foo = jpegData.toString(); console.log(foo.length)
         var exifObj = piexif.load(jpegData);
-        var ifdList = []
-        for (var ifd in exifObj) {
-            ifdList.push(ifd)
-            for (var tag in exifObj[ifd]) {
-                var nm; try { nm = piexif.TAGS[ifd][tag]["name"]}catch(e){}
-                if (!nm) continue
-                // console.log("++++  " + nm + ": [" + exifObj[ifd][tag] + ']');
-                console.log(               )
-                // piexif.ImageIFD.ImageDescription   is value 270
-                if (nm == 'ImageDescription') {
-                    console.log("++++  " + nm + ": [" + exifObj[ifd][tag] + ']');
-                    console.log('++++  ImageDescription: ' +
-                        exifObj['0th'][piexif.ImageIFD.ImageDescription] )
-                    exifObj['0th'][piexif.ImageIFD.ImageDescription] = '000000'
-                }
-            }
-        }
-        var newJpeg = piexif.insert(piexif.dump(exifObj), jpegData)
+        console.log('' 
+            + '\nmake: ' + exifObj['0th'][piexif.ImageIFD.Make]
+            + '\nModel: ' + exifObj['0th'][piexif.ImageIFD.Model]
+            + '\nGPSLatitude: '  + exifObj.GPS[piexif.GPSIFD.GPSLatitude]
+            + '\nGPSLatitudeRef: '  + exifObj.GPS[piexif.GPSIFD.GPSLatitudeRef]
+            + '\nGPSLongitude: '  + exifObj.GPS[piexif.GPSIFD.GPSLongitude]
+            + '\nGPSLongitudeRef: '  + exifObj.GPS[piexif.GPSIFD.GPSLongitudeRef]
+            )
+        console.log('bb')
+        //var ifdList = []
+        // for (var ifd in exifObj) {
+        //     ifdList.push(ifd)
+        //     for (var tag in exifObj[ifd]) {
+        //         var nm; try { nm = piexif.TAGS[ifd][tag]["name"]}catch(e){}
+        //         if (!nm) continue
+        //         // console.log("++++  " + nm + ": [" + exifObj[ifd][tag] + ']');
+        //         console.log(               )
+        //         // piexif.ImageIFD.ImageDescription   is value 270
+        //         if (nm == 'ImageDescription') {
+        //             console.log("++++  " + nm + ": [" + exifObj[ifd][tag] + ']');
+        //             console.log('++++  ImageDescription: ' +
+        //                 exifObj['0th'][piexif.ImageIFD.ImageDescription] )
+        //             exifObj['0th'][piexif.ImageIFD.ImageDescription] = '000000'
+        //         }
+        //     }
+        // }
+        // var newJpeg = piexif.insert(piexif.dump(exifObj), jpegData)
         
     } catch (ex) { 
         console.log("error exif: " + ex)

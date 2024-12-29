@@ -6,6 +6,7 @@
  */
 // import { system } from "systeminformation";
 import { ResizeImage, examineEXIF } from "./ImageProcHelper"
+import { TestPie, TestPie2 }  from "./PiexifHelper";
 const path = require('path');
 var readlineSync = require('readline-sync');
 const fsPkg = require('fs'); // syntax from node js file running with node
@@ -27,7 +28,7 @@ const DEST_MINI = DEST_ROOT + '/miniSize'
 var DRY_RUN=true;
 showFullCommandLine()
 console.log('proceeding with DRY_RUN=' + DRY_RUN);
-//TestPie();  return;
+
 console.log(BRIGHTRED + 'Be sure to transpile *.ts to *.js before running: \n' +
   '   ../node_modules/typescript/bin/tsc --project tsconfig_dogs.json --watch' + COLRESET
 )
@@ -42,6 +43,7 @@ if (yargsCmds.DRY_RUN != 'true') {  // set this way when developing ie VSCode
   var mat:any = readlineSync.question().match(/^(y|Y)$/) // ^ is start, match y or Y then end of string
   DRY_RUN = mat ? false : true
 } 
+// DRY_RUN=false;
 runIt()
 console.log(BRIGHTYELLOW + 'DONE with DRY_RUN=' + DRY_RUN);
 
@@ -93,6 +95,8 @@ function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destina
               console.log('not image, copying file ' + sourcePath)
               fsPkg.copyFileSync(sourcePath, destPath_fullSize)
           } else {
+              //if (new RegExp(/.*Beatles.*/, 'i').test(sourcePath)) 
+              //    console.log('==============' + TestPie2(sourcePath))
               fsPkg.writeFileSync(destPath_fullSize, 'test content', 'utf8');
               ResizeImage(sourcePath, RESIZE_PX_FULL, destPath_fullSize)
               ResizeImage(sourcePath, RESIZE_PX_MINI, destPath_miniSize)
@@ -251,13 +255,13 @@ readAJSON('./public/jpeg').then(theArr => {
           "<node_internals>/**"
         ],
         // "program": "${workspaceFolder}\\menuBuilder\\compiledJS\\fileListInPublicJpeg.js",
-        //"cwd": "${workspaceFolder}\\menuBuilder", // run from this folder; all paths now relative to here
+        "cwd": "${workspaceFolder}\\xforms", // run from this folder; all paths now relative to here
         // without cwd ->  "program": "${workspaceFolder}\\menuBuilder\\compiledJS\\fileListToMenuSpec_metaData.js",
-        "program": "compiledJS/imagesTreeCopyNResize.js",
+        "program": "typescriptCompiled/imagesTreeCopyNResize.js",
         "args": [
-          "--imgSrcFolder", "./origJPEG/jpeg",
-          "--PIXMINI", "99", "--PIXFULL", "446"
-          //"--DRY_RUN", "true" // this disables interactive verification prompt
+          "--imgSrcFolder", "../origJPEG/jpeg",
+          "--PIXMINI", "99", "--PIXFULL", "446",
+          "--DRY_RUN", "true" // this disables interactive verification prompt
           // slick but sloppy ->    "{ \"imgFolder\":\"./public/jpeg\", \"menuOut\":\"menuBuilder/output/outMenuFile.json\", \"pictureMetaFile\":\"menuBuilder/metaDataEdited//pictureMetaData.json\" }"
         ]
       }

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-./node_modules/typescript/bin/tsc --project tsconfig_dogs.json --watch
