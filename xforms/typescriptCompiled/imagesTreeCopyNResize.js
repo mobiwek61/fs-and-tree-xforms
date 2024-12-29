@@ -125,11 +125,12 @@ function checkForUnsafeFilePaths(str) {
     // let word = "bar"; let regex = new RegExp(`foo|${word}`, "i"    backtics
     const slashesNdotsNcolon = new RegExp(/^\/.*|^\\.*|.*\.\..*|.*:.*/);
     // //SAVE for testing regex  
-    //   console.log(slashesNdots.test('afew/waefw') + '  string: ' + 'afew/waefw')
-    //   console.log(slashesNdots.test('/afew/waefw') + '  string: ' + '/afew/waefw')
-    //   console.log(slashesNdots.test('\\afew/waefw') + '  string: ' + '\\afew/waefw')
-    //   console.log(slashesNdots.test('afew/../waefw') + '  string: ' + 'afew/../waefw')
-    //   console.log(slashesNdots.test('/afew/../waefw') + '  string: ' + '/afew/../waefw')
+    //   console.log(slashesNdotsNcolon.test('afew/waefw') + '  string: ' + 'afew/waefw')
+    //   console.log(slashesNdotsNcolon.test('/afew/waefw') + '  string: ' + '/afew/waefw')
+    //   console.log(slashesNdotsNcolon.test('\\afew/waefw') + '  string: ' + '\\afew/waefw')
+    //   console.log(slashesNdotsNcolon.test('afew/../waefw') + '  string: ' + 'afew/../waefw')
+    //   console.log(slashesNdotsNcolon.test('/afew/../waefw') + '  string: ' + '/afew/../waefw')
+    //   console.log(slashesNdotsNcolon.test('C:bbb.jpeg') + '  string: ' + 'C:bbb.jpeg')
     //   str = 'afew/../waefw'
     if (slashesNdotsNcolon.test(str)) {
         console.log('destination cannot start with / or \\ or contain 2 dots .. anywhere. Prevents inserting files into system areas.');
@@ -148,25 +149,6 @@ function showFullCommandLine() {
 }
 /* trash
 /////////////////////////////////
-TRASH TRASH TRASH TRASH TRASH TRASH TRASH TRASH TRASH TRASH TRASH TRASH
-const allShrunk = twoLists.metaList.lookup.map((mEntry:any) => {
-    const srcFilePath = mEntry.mwmkey
-      //imgFileName mwmtype txtdesc
-
-// SAVE simple reference example of external typescript class->
-// const oneUser: User = new UserAccount("Murphy", 1);
-// console.log('import class test..: ' + oneUser.name)
-
-
-DOES NOT WORK
-const strA = fsPkg.readFileSync(yargsCmds.pictureMetaFile, 'utf8', (err: any, data:any) => {
-    console.log(err)
-    if (err) {
-      console.log('error open file for read: ' + err.message);
-      return
-      // throw err;
-    }
-})
 
 // fix / vs \ for windows vs nix
 var mat = process.argv[1].match(/[^\\]*\.(\w+)$/);
@@ -205,81 +187,5 @@ console.log(os.platform() + ' running: \n' + (mat ? mat[0] : '') );
 readAJSON('./public/jpeg').then(theArr => {
    console.log('result: ' + JSON.stringify(theArr))
 })
-
-
-/** ///////////////////// SAVE THIS!!! visual studio launch.json file for this project:
-{
-    // This file lives in the .vscode folder, which gets excluded from git by .gitignore because
-    //    it may have details about my computer.
-    // ref: https://code.visualstudio.com/docs/editor/variables-reference
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "name": "runSharpJS test",
-        "cwd": "${workspaceFolder}\\menuBuilder\\sharpTest",
-        "program": "runSharpJS.js",
-        "args": ["--imgFile", "American_Gothic88Wikimedia.jpg"],
-        "request": "launch",
-        "skipFiles": [
-          "<node_internals>/**"
-        ],
-        "type": "node"
-      },
-    
-      // that gets run as ../node_modules/typescript/bin/tsc --watch
-      // whenever the *.ts file changes, it gets transpiled into javascript so it can be run (see below)
-      // File tsconfig.json in the project tells tsc what to compile and how etc..
-      {
-        "name": "Transpile in watch mode",
-        "type": "node",
-        "request": "launch",
-        "runtimeExecutable": "tsc",
-        "cwd": "${workspaceFolder}\\menuBuilder", // run from this folder otherwise wont find ts file
-        "args": ["--watch"] // '--verbose' may only be used with '--build'
-        // refer to tsconfig.json for how it chooses *.ts to compile
-      },
-      {
-        // this runs the compiled .js file created from tsc transpiler above
-        "name": "treeToMenu",
-        "type": "node",
-        "request": "launch",
-        "skipFiles": [
-          "<node_internals>/**"
-        ],
-        // "program": "${workspaceFolder}\\menuBuilder\\compiledJS\\fileListInPublicJpeg.js",
-        "cwd": "${workspaceFolder}\\menuBuilder", // run from this folder; all paths now relative to here
-        // without cwd ->  "program": "${workspaceFolder}\\menuBuilder\\compiledJS\\fileListToMenuSpec_metaData.js",
-        "program": "compiledJS/treeToMenu.js",
-        "args": [
-          "--imgFolder", "../public/jpeg",
-          "--menuOut", "outputFiles/outMenuFile.json",
-          "--pictureMetaFile", "../public/pictureMetaData.json",
-          "--backupDir", "outputFiles/baks"
-          // moved to imageTreeCopyNResize.ts     "--shrunkImagesDir", "outputFiles/miniImages"
-          // slick but sloppy ->    "{ \"imgFolder\":\"./public/jpeg\", \"menuOut\":\"menuBuilder/output/outMenuFile.json\", \"pictureMetaFile\":\"menuBuilder/metaDataEdited//pictureMetaData.json\" }"
-        ]
-      },
-      {
-        // this runs the compiled .js file created from tsc transpiler above
-        "name": "imagesTreeCopyNResize",
-        "console": "integratedTerminal", // allows for user input stdin for debug session
-        "type": "node",
-        "request": "launch",
-        "skipFiles": [
-          "<node_internals>/**"
-        ],
-        // "program": "${workspaceFolder}\\menuBuilder\\compiledJS\\fileListInPublicJpeg.js",
-        "cwd": "${workspaceFolder}\\xforms", // run from this folder; all paths now relative to here
-        // without cwd ->  "program": "${workspaceFolder}\\menuBuilder\\compiledJS\\fileListToMenuSpec_metaData.js",
-        "program": "typescriptCompiled/imagesTreeCopyNResize.js",
-        "args": [
-          "--imgSrcFolder", "../origJPEG/jpeg",
-          "--PIXMINI", "99", "--PIXFULL", "446",
-          "--DRY_RUN", "true" // this disables interactive verification prompt
-          // slick but sloppy ->    "{ \"imgFolder\":\"./public/jpeg\", \"menuOut\":\"menuBuilder/output/outMenuFile.json\", \"pictureMetaFile\":\"menuBuilder/metaDataEdited//pictureMetaData.json\" }"
-        ]
-      }
-    ]
-  }
-///////////// END!!! visual studio launch.json */ 
+*/
 //# sourceMappingURL=imagesTreeCopyNResize.js.map
