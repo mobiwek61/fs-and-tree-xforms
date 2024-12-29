@@ -8,6 +8,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 // import { system } from "systeminformation";
 const ImageProcHelper_1 = require("./ImageProcHelper");
+const exifHelper_1 = require("./exifHelper");
 const path = require('path');
 var readlineSync = require('readline-sync');
 const fsPkg = require('fs'); // syntax from node js file running with node
@@ -37,7 +38,7 @@ console.log(BRIGHTRED + 'Be sure to transpile *.ts to *.js before running: \n' +
     '   ../node_modules/typescript/bin/tsc --project tsconfig_dogs.json --watch' + COLRESET);
 console.log('This javascript, \"' + BRIGHTYELLOW + path.relative(process.cwd(), process.argv[1]) + COLRESET +
     '\" Recursively copies\n    source folder to subfolder (fixed value): ' + BRIGHTYELLOW + DEST_ROOT + COLRESET +
-    '.\n    Usage:  ' + BRIGHTYELLOW + 'node.exe compiledJS/imagesTreeCopyNResize.js --imgSrcFolder ../public/jpeg' +
+    '.\n    Usage:  ' + BRIGHTYELLOW + 'node.exe typescriptCompiled/imagesTreeCopyNResize.js --imgSrcFolder ../public/jpeg' +
     ' --PIXFULL 444 --PIXMINI 88 ' + COLRESET);
 if (!yargsCmds.imgSrcFolder) {
     console.log('imgSrcFolder not specified. Quitting. ');
@@ -99,14 +100,17 @@ function recurseFolders(srcDirRecurseLevel, srcRootPath, destinationRootDir, LIV
         else {
             console.log(BRIGHTGREEN + 'jpeg: ' + COLRESET + '\nsource:      ' + BRIGHTRED + sourcePath + COLRESET + '\ndest: ' +
                 BRIGHTRED + destPath_fullSize + '\n      ' + destPath_miniSize);
+            if (new RegExp(/.*Beatles.*/, 'i').test(sourcePath)) {
+                // console.log('==============' + TestPie2(sourcePath))
+                (0, exifHelper_1.testExif)(sourcePath);
+                //process.exit()
+            }
             if (LIVE_RUN) {
                 if (!sourcePath.match(/.*(\.jpg|\.JPG|\.jpeg|\.JPEG)/)) {
                     console.log('not image, copying file ' + sourcePath);
                     fsPkg.copyFileSync(sourcePath, destPath_fullSize);
                 }
                 else {
-                    //if (new RegExp(/.*Beatles.*/, 'i').test(sourcePath)) 
-                    //    console.log('==============' + TestPie2(sourcePath))
                     fsPkg.writeFileSync(destPath_fullSize, 'test content', 'utf8');
                     (0, ImageProcHelper_1.ResizeImage)(sourcePath, RESIZE_PX_FULL, destPath_fullSize);
                     (0, ImageProcHelper_1.ResizeImage)(sourcePath, RESIZE_PX_MINI, destPath_miniSize);
@@ -119,7 +123,7 @@ function recurseFolders(srcDirRecurseLevel, srcRootPath, destinationRootDir, LIV
 }
 function checkForUnsafeFilePaths(str) {
     // let word = "bar"; let regex = new RegExp(`foo|${word}`, "i"    backtics
-    const slashesNdots = new RegExp(/^\/.*|^\\.*|.*\.\..*/);
+    const slashesNdotsNcolon = new RegExp(/^\/.*|^\\.*|.*\.\..*|.*:.*/);
     // //SAVE for testing regex  
     //   console.log(slashesNdots.test('afew/waefw') + '  string: ' + 'afew/waefw')
     //   console.log(slashesNdots.test('/afew/waefw') + '  string: ' + '/afew/waefw')
@@ -127,13 +131,13 @@ function checkForUnsafeFilePaths(str) {
     //   console.log(slashesNdots.test('afew/../waefw') + '  string: ' + 'afew/../waefw')
     //   console.log(slashesNdots.test('/afew/../waefw') + '  string: ' + '/afew/../waefw')
     //   str = 'afew/../waefw'
-    if (slashesNdots.test(str)) {
+    if (slashesNdotsNcolon.test(str)) {
         console.log('destination cannot start with / or \\ or contain 2 dots .. anywhere. Prevents inserting files into system areas.');
         process.exit();
     }
 }
 function showFullCommandLine() {
-    var outstr = ' ';
+    var outstr = 'node.exe ';
     process.argv.forEach((val, index) => {
         if (index == 1)
             outstr += path.relative(process.cwd(), val) + ' '; // val is absolute path, so convert to relative

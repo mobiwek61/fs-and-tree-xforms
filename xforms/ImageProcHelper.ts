@@ -1,9 +1,7 @@
 // import { Sharp } from "sharp"
 
-import exifr from 'exifr'
-import fs from 'fs'
-// var exif_reader = require('exif-reader'); 
-import { TestPie, TestPie2 }  from "./PiexifHelper";
+//import exifr from 'exifr'
+import fs from 'fs' 
 const sharp = require('sharp');
 
 const ResizeImage = async ( srcFileName:string , newWidth:number, destFileName:string) => {
@@ -35,16 +33,4 @@ const ResizeImage = async ( srcFileName:string , newWidth:number, destFileName:s
 
 }
 
-async function examineEXIF(srcFileName:string) {
-    if (srcFileName.match('.*captionAn.*')) {
-        // TestPie2(srcFileName); return
-        /* less popular exif_reader from npm
-        var exiFF = exif_reader(mdata.exif)
-        console.log('exif data from ' + destFileName + '\n    ' + exiFF.Image.ImageDescription)// exiFF.XPTitle)*/
-        var exiFF = await exifr.parse(srcFileName)
-        console.log('zz exifr data from ' + srcFileName + '   \n' + exiFF.XPTitle)
-        TestPie2(srcFileName)
-    }
-}
-
-export { ResizeImage, examineEXIF }
+export { ResizeImage }

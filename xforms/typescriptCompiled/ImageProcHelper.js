@@ -9,14 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.examineEXIF = exports.ResizeImage = void 0;
-const exifr_1 = __importDefault(require("exifr"));
-// var exif_reader = require('exif-reader'); 
-const PiexifHelper_1 = require("./PiexifHelper");
+exports.ResizeImage = void 0;
 const sharp = require('sharp');
 const ResizeImage = (srcFileName, newWidth, destFileName) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -46,18 +40,4 @@ const ResizeImage = (srcFileName, newWidth, destFileName) => __awaiter(void 0, v
     // sharp(args.srcFileName).resize(55).toFile('foo.jpg')
 });
 exports.ResizeImage = ResizeImage;
-function examineEXIF(srcFileName) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (srcFileName.match('.*captionAn.*')) {
-            // TestPie2(srcFileName); return
-            /* less popular exif_reader from npm
-            var exiFF = exif_reader(mdata.exif)
-            console.log('exif data from ' + destFileName + '\n    ' + exiFF.Image.ImageDescription)// exiFF.XPTitle)*/
-            var exiFF = yield exifr_1.default.parse(srcFileName);
-            console.log('zz exifr data from ' + srcFileName + '   \n' + exiFF.XPTitle);
-            (0, PiexifHelper_1.TestPie2)(srcFileName);
-        }
-    });
-}
-exports.examineEXIF = examineEXIF;
 //# sourceMappingURL=ImageProcHelper.js.map

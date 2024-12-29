@@ -5,8 +5,8 @@
  * Special precautions make copy only to subdirectories of current, to prevent placement of stuff where it doesn't belong.
  */
 // import { system } from "systeminformation";
-import { ResizeImage, examineEXIF } from "./ImageProcHelper"
-import { TestPie, TestPie2 }  from "./PiexifHelper";
+import { ResizeImage } from "./ImageProcHelper"
+import { testExif } from "./exifHelper";
 const path = require('path');
 var readlineSync = require('readline-sync');
 const fsPkg = require('fs'); // syntax from node js file running with node
@@ -34,7 +34,7 @@ console.log(BRIGHTRED + 'Be sure to transpile *.ts to *.js before running: \n' +
 )
 console.log( 'This javascript, \"' + BRIGHTYELLOW + path.relative( process.cwd(), process.argv[1])  + COLRESET + 
   '\" Recursively copies\n    source folder to subfolder (fixed value): '+ BRIGHTYELLOW + DEST_ROOT + COLRESET + 
-  '.\n    Usage:  ' + BRIGHTYELLOW + 'node.exe compiledJS/imagesTreeCopyNResize.js --imgSrcFolder ../public/jpeg' + 
+  '.\n    Usage:  ' + BRIGHTYELLOW + 'node.exe typescriptCompiled/imagesTreeCopyNResize.js --imgSrcFolder ../public/jpeg' + 
   ' --PIXFULL 444 --PIXMINI 88 ' + COLRESET)
 if (!yargsCmds.imgSrcFolder) { console.log('imgSrcFolder not specified. Quitting. '); process.exit(); }
 if (!yargsCmds.PIXFULL || !yargsCmds.PIXMINI) { console.log('PIXFULL or PIXMINI not specified. Quitting. '); process.exit(); }
@@ -90,13 +90,16 @@ function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destina
       } else {
         console.log(BRIGHTGREEN + 'jpeg: ' + COLRESET + '\nsource:      ' + BRIGHTRED + sourcePath + COLRESET + '\ndest: ' +
           BRIGHTRED +  destPath_fullSize + '\n      ' + destPath_miniSize) 
-        if (LIVE_RUN) {
+          if (new RegExp(/.*Beatles.*/, 'i').test(sourcePath)) {
+            // console.log('==============' + TestPie2(sourcePath))
+            testExif(sourcePath)
+            //process.exit()
+          }
+          if (LIVE_RUN) {
           if (!sourcePath.match(/.*(\.jpg|\.JPG|\.jpeg|\.JPEG)/)) {
               console.log('not image, copying file ' + sourcePath)
               fsPkg.copyFileSync(sourcePath, destPath_fullSize)
           } else {
-              //if (new RegExp(/.*Beatles.*/, 'i').test(sourcePath)) 
-              //    console.log('==============' + TestPie2(sourcePath))
               fsPkg.writeFileSync(destPath_fullSize, 'test content', 'utf8');
               ResizeImage(sourcePath, RESIZE_PX_FULL, destPath_fullSize)
               ResizeImage(sourcePath, RESIZE_PX_MINI, destPath_miniSize)
@@ -109,7 +112,7 @@ function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destina
 
 function checkForUnsafeFilePaths(str:any) {
   // let word = "bar"; let regex = new RegExp(`foo|${word}`, "i"    backtics
-  const slashesNdots = new RegExp(/^\/.*|^\\.*|.*\.\..*/)
+  const slashesNdotsNcolon = new RegExp(/^\/.*|^\\.*|.*\.\..*|.*:.*/)
   // //SAVE for testing regex  
   //   console.log(slashesNdots.test('afew/waefw') + '  string: ' + 'afew/waefw')
   //   console.log(slashesNdots.test('/afew/waefw') + '  string: ' + '/afew/waefw')
@@ -117,13 +120,13 @@ function checkForUnsafeFilePaths(str:any) {
   //   console.log(slashesNdots.test('afew/../waefw') + '  string: ' + 'afew/../waefw')
   //   console.log(slashesNdots.test('/afew/../waefw') + '  string: ' + '/afew/../waefw')
   //   str = 'afew/../waefw'
-  if (slashesNdots.test(str)) {
+  if (slashesNdotsNcolon.test(str)) {
     console.log('destination cannot start with / or \\ or contain 2 dots .. anywhere. Prevents inserting files into system areas.')
     process.exit()
   }
 }
 
-function showFullCommandLine() { var outstr=' '; process.argv.forEach((val, index) => {
+function showFullCommandLine() { var outstr='node.exe '; process.argv.forEach((val, index) => {
   if (index == 1) outstr += path.relative( process.cwd(), val) + ' ' ; // val is absolute path, so convert to relative
   if (index > 1) outstr += `${val}  `;}); console.log('command line: ' + BRIGHTYELLOW + outstr)}
 

@@ -3,7 +3,7 @@
 // FOR BASH PIPES TO WORK, .EXE MUST BE INCLUDED IN COMMAND LINE ->   node.exe fileListInPublicJpeg > foo
 // see accompanying "buildMenu" script to see how I get compiled and run.
 import { User, UserAccount } from "./Helper"
-import { ResizeImage, examineEXIF } from "./ImageProcHelper"
+import { ResizeImage } from "./ImageProcHelper"
 
 // import { GetNextBackupNumber} from "./ConsecutiveBackup"
 const fsPkg = require('fs'); // syntax from node js file running with node

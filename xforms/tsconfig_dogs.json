@@ -1,9 +1,8 @@
 {
   "files": [
-    // "fileListInPublicJpeg.ts"
-    "treeToMenu.ts"
-    , "imagesTreeCopyNResize.ts"
-    //,"TraverseTest.ts"
+    "treeToMenu.ts", "ImageProcHelper.ts", 
+    "imagesTreeCopyNResize.ts",
+    "exifHelper.ts"
   ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
