@@ -1,0 +1,235 @@
+[
+	{
+		"MM:dd hh:mm:ss": "12/29 16:33:02",
+		"mwmkey": 1
+	},
+	{
+		"image sources": "WMED wikimedia, LOC Library of congress, TMET ny met mus of art",
+		"mwmkey": 2
+	},
+	{
+		"BRANCH": "jpeg",
+		"mwmkey": "jpeg",
+		"items": [
+			{
+				"LEAF": "American_Gothic",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/American_Gothic88Wikimedia.jpg",
+				"mwmkey": "American_Gothic",
+				"mwmtype": "image"
+			},
+			{
+				"LEAF": "beatles",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/beatles.jpg",
+				"mwmkey": "beatles",
+				"mwmtype": "image"
+			},
+			{
+				"LEAF": "captionAnttitle",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/captionAnttitle.jpg",
+				"mwmkey": "captionAnttitle",
+				"mwmtype": "image"
+			},
+			{
+				"LEAF": "enterpriseInProfile",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/enterpriseInProfile.jpg",
+				"mwmkey": "enterpriseInProfile",
+				"mwmtype": "image"
+			},
+			{
+				"BRANCH": "farmersmkt",
+				"mwmkey": "farmersmkt",
+				"items": [
+					{
+						"LEAF": "beets",
+						"txtdesc": "",
+						"imgurl": "../origJPEG/jpeg/farmersmkt/beets.JPG",
+						"mwmkey": "beets",
+						"mwmtype": "image"
+					},
+					{
+						"LEAF": "daisy",
+						"txtdesc": "",
+						"imgurl": "../origJPEG/jpeg/farmersmkt/daisy.JPG",
+						"mwmkey": "daisy",
+						"mwmtype": "image"
+					},
+					{
+						"LEAF": "garlic",
+						"txtdesc": "",
+						"imgurl": "../origJPEG/jpeg/farmersmkt/garlic.JPG",
+						"mwmkey": "garlic",
+						"mwmtype": "image"
+					},
+					{
+						"LEAF": "jalepenos",
+						"txtdesc": "",
+						"imgurl": "../origJPEG/jpeg/farmersmkt/jalepenos.JPG",
+						"mwmkey": "jalepenos",
+						"mwmtype": "image"
+					}
+				]
+			},
+			{
+				"BRANCH": "hist",
+				"mwmkey": "hist",
+				"items": [
+					{
+						"BRANCH": "aerospace",
+						"mwmkey": "aerospace",
+						"items": [
+							{
+								"LEAF": "WIKIMEDIA-spaceShuttleOrbit",
+								"txtdesc": "",
+								"imgurl": "../origJPEG/jpeg/hist/aerospace/WIKIMEDIA-spaceShuttleOrbit.jpg",
+								"mwmkey": "WIKIMEDIA-spaceShuttleOrbit",
+								"mwmtype": "image"
+							},
+							{
+								"LEAF": "WIKIMEDIA-spaceShuttleTransport",
+								"txtdesc": "",
+								"imgurl": "../origJPEG/jpeg/hist/aerospace/WIKIMEDIA-spaceShuttleTransport.jpg",
+								"mwmkey": "WIKIMEDIA-spaceShuttleTransport",
+								"mwmtype": "image"
+							},
+							{
+								"LEAF": "WIKIMEDIA-X-15_flying",
+								"txtdesc": "",
+								"imgurl": "../origJPEG/jpeg/hist/aerospace/WIKIMEDIA-X-15_flying.jpg",
+								"mwmkey": "WIKIMEDIA-X-15_flying",
+								"mwmtype": "image"
+							}
+						]
+					},
+					{
+						"LEAF": "American_Gothic",
+						"txtdesc": "",
+						"imgurl": "../origJPEG/jpeg/hist/American_Gothic88Wikimedia.jpg",
+						"mwmkey": "American_Gothic",
+						"mwmtype": "image"
+					},
+					{
+						"BRANCH": "benFranklin",
+						"mwmkey": "benFranklin",
+						"items": [
+							{
+								"LEAF": "LOC-benFranklinSpeedOfShips",
+								"txtdesc": "",
+								"imgurl": "../origJPEG/jpeg/hist/benFranklin/LOC-benFranklinSpeedOfShips.jpg",
+								"mwmkey": "LOC-benFranklinSpeedOfShips",
+								"mwmtype": "image"
+							},
+							{
+								"LEAF": "LOC-benFranklin_sailingShipDiagram",
+								"txtdesc": "",
+								"imgurl": "../origJPEG/jpeg/hist/benFranklin/LOC-benFranklin_sailingShipDiagram.jpg",
+								"mwmkey": "LOC-benFranklin_sailingShipDiagram",
+								"mwmtype": "image"
+							},
+							{
+								"LEAF": "ship_diagram",
+								"txtdesc": "",
+								"imgurl": "../origJPEG/jpeg/hist/benFranklin/ship_diagram88HHLOC-benFranklin_sailingShipDiagram.jpg",
+								"mwmkey": "ship_diagram",
+								"mwmtype": "handwriting"
+							}
+						]
+					},
+					{
+						"BRANCH": "horaceGreeley",
+						"mwmkey": "horaceGreeley",
+						"items": [
+							{
+								"LEAF": "LOC-greeley-apprenticeagreement",
+								"txtdesc": "",
+								"imgurl": "../origJPEG/jpeg/hist/horaceGreeley/LOC-greeley-apprenticeagreement.jpg",
+								"mwmkey": "LOC-greeley-apprenticeagreement",
+								"mwmtype": "image"
+							},
+							{
+								"LEAF": "LOC-greeleyReminices1_enh",
+								"txtdesc": "",
+								"imgurl": "../origJPEG/jpeg/hist/horaceGreeley/LOC-greeleyReminices1_enh.jpg",
+								"mwmkey": "LOC-greeleyReminices1_enh",
+								"mwmtype": "image"
+							},
+							{
+								"LEAF": "LOC-nyTribuneMay16-1866",
+								"txtdesc": "",
+								"imgurl": "../origJPEG/jpeg/hist/horaceGreeley/LOC-nyTribuneMay16-1866.jpg",
+								"mwmkey": "LOC-nyTribuneMay16-1866",
+								"mwmtype": "image"
+							}
+						]
+					}
+				]
+			},
+			{
+				"LEAF": "imgLoading",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/imgLoading.JPG",
+				"mwmkey": "imgLoading",
+				"mwmtype": "image"
+			},
+			{
+				"LEAF": "Kangaroo",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/Kangaroo88geo_stubbsWIKIMED.jpg",
+				"mwmkey": "Kangaroo",
+				"mwmtype": "image"
+			},
+			{
+				"LEAF": "LICENSE",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/LICENSE",
+				"mwmkey": "LICENSE",
+				"mwmtype": "image"
+			},
+			{
+				"LEAF": "LOC-AbeLincoln",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/LOC-AbeLincoln.jpg",
+				"mwmkey": "LOC-AbeLincoln",
+				"mwmtype": "image"
+			},
+			{
+				"LEAF": "loc-shipbuilding",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/loc-shipbuilding.jpg",
+				"mwmkey": "loc-shipbuilding",
+				"mwmtype": "image"
+			},
+			{
+				"LEAF": "modjpeg",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/modjpeg.jpg",
+				"mwmkey": "modjpeg",
+				"mwmtype": "image"
+			},
+			{
+				"LEAF": "samplePerson",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/samplePerson.jpg",
+				"mwmkey": "samplePerson",
+				"mwmtype": "image"
+			},
+			{
+				"LEAF": "WIKIMEDIA-Winslow-HomerFogWarning",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/WIKIMEDIA-Winslow-HomerFogWarning.jpg",
+				"mwmkey": "WIKIMEDIA-Winslow-HomerFogWarning",
+				"mwmtype": "image"
+			},
+			{
+				"LEAF": "WIKIMEDIA_American_Gothic",
+				"txtdesc": "",
+				"imgurl": "../origJPEG/jpeg/WIKIMEDIA_American_Gothic.jpg",
+				"mwmkey": "WIKIMEDIA_American_Gothic",
+				"mwmtype": "image"
+			}
+		]
+	}
+]

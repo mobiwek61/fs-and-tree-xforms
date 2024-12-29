@@ -1,0 +1,136 @@
+{
+	"$schema": "./pictureMetaDataSchema.json",
+	"comment2": "the $schema tag causes VSCode to use the schema for intellisence, errors",
+	"lookup": [
+		{
+			"imgFileName": "American_Gothic88Wikimedia.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "beatles.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "captionAnttitle.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "enterpriseInProfile.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "beets.JPG",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "daisy.JPG",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "garlic.JPG",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "jalepenos.JPG",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "WIKIMEDIA-spaceShuttleOrbit.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "WIKIMEDIA-spaceShuttleTransport.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "WIKIMEDIA-X-15_flying.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "LOC-benFranklinSpeedOfShips.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "LOC-benFranklin_sailingShipDiagram.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "ship_diagram88HHLOC-benFranklin_sailingShipDiagram.jpg",
+			"txtdesc": "",
+			"mwmtype": "handwriting"
+		},
+		{
+			"imgFileName": "LOC-greeley-apprenticeagreement.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "LOC-greeleyReminices1_enh.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "LOC-nyTribuneMay16-1866.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "imgLoading.JPG",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "Kangaroo88geo_stubbsWIKIMED.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "LICENSE",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "LOC-AbeLincoln.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "loc-shipbuilding.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "modjpeg.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "samplePerson.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "WIKIMEDIA-Winslow-HomerFogWarning.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		},
+		{
+			"imgFileName": "WIKIMEDIA_American_Gothic.jpg",
+			"txtdesc": "",
+			"mwmtype": "image"
+		}
+	]
+}
