@@ -65,11 +65,11 @@ function runIt() {
     var twoLists = readAJSON_recurs(yargsCmds.imgFolder, pictureMetaExisting);
     twoLists.setupHead(); // put in timestamp, other info to help someone viewing the file
     // twoLists only has new (missing) records. Now put back the originals.
-    twoLists.metaList.lookup.push(...pictureMetaExisting); // unshift
     // !!COPILOT!! prompts: "typescript array deduplicate" then "with objects where one field is the key"
-    // const uniqueArray = Array.from(new Set(twoLists.metaList.lookup));
-    const uniqueArray = Array.from(new Map(twoLists.metaList.lookup.map(item => [item.imgFileName, item])).values());
-    twoLists.metaList.lookup = uniqueArray;
+    // js Map is key-value pairs where key is unique. Iterate lookup using map() fn to get array of values()
+    const deDuplicatedArr = Array.from(new Map(twoLists.metaList.lookup.map(item => [item.imgFileName, item])).values());
+    twoLists.metaList.lookup = deDuplicatedArr;
+    twoLists.metaList.lookup.push(...pictureMetaExisting); // unshift
     //  remove " from tags. OK to copy\paste to code, notok for json file
     // var menuStrNoQuoteTag = JSON.stringify(menuFromFileTree).replace(/\"([^(\")"]+)\":/g,"$1:");
     // REMOVED: THIS NOW DONE BY imageTreeCopyNResize.ts  
