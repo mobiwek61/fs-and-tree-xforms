@@ -13,7 +13,12 @@ function testExif(filePath) {
     console.log('zzaatestExif');
     // https://www.npmjs.com/package/jpeg-exif
     const data = exif.parseSync(filePath);
-    console.log(data); // debugger breakpoint here to see all the stuff
+    var restcoord = toStr(data.GPSInfo.GPSLatitude) + data.GPSInfo.GPSLatitudeRef + '+' +
+        toStr(data.GPSInfo.GPSLongitude) + data.GPSInfo.GPSLongitudeRef;
+    // SET debugger breakpoint here to see all the stuff
+    console.log(restcoord);
+    // window.open('https://www.google.com/maps/place/' + restcoord)
 }
 exports.testExif = testExif;
+function toStr(gg) { return gg[0] + '°' + gg[1] + '\'' + gg[2] + '\"'; }
 //# sourceMappingURL=exifHelper.js.map
