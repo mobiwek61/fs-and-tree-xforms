@@ -1,7 +1,4 @@
 
-COPY OF LAUNCH.JSON FOR VSCODE DEBUGGER. ACTUAL FILE EXCLUDED BY .GITIGNORE FOR SECURITY REASONS.
---- clip ---------
-
 {
     // This file lives in the .vscode folder, which gets excluded from git by .gitignore because
     //    it may have details about my computer.  
@@ -41,13 +38,13 @@ COPY OF LAUNCH.JSON FOR VSCODE DEBUGGER. ACTUAL FILE EXCLUDED BY .GITIGNORE FOR 
           "<node_internals>/**"
         ],
         // "program": "${workspaceFolder}\\menuBuilder\\compiledJS\\fileListInPublicJpeg.js",
-        "cwd": "${workspaceFolder}\\menuBuilder", // run from this folder; all paths now relative to here
+        "cwd": "${workspaceFolder}\\A_xforms", // run from this folder; all paths now relative to here
         // without cwd ->  "program": "${workspaceFolder}\\menuBuilder\\compiledJS\\fileListToMenuSpec_metaData.js",
-        "program": "compiledJS/treeToMenu.js",
+        "program": "typescriptCompiled/treeToMenu.js",
         "args": [
-          "--imgFolder", "../public/jpeg",
+          "--imgFolder", "../origJPEG",
           "--menuOut", "outputFiles/outMenuFile.json",
-          "--pictureMetaFile", "../public/pictureMetaData.json",
+          "--pictureMetaFile", "outputFiles/pictureMetaData.json",
           "--backupDir", "outputFiles/baks"
           // moved to imageTreeCopyNResize.ts     "--shrunkImagesDir", "outputFiles/miniImages"
           // slick but sloppy ->    "{ \"imgFolder\":\"./public/jpeg\", \"menuOut\":\"menuBuilder/output/outMenuFile.json\", \"pictureMetaFile\":\"menuBuilder/metaDataEdited//pictureMetaData.json\" }"
@@ -63,7 +60,7 @@ COPY OF LAUNCH.JSON FOR VSCODE DEBUGGER. ACTUAL FILE EXCLUDED BY .GITIGNORE FOR 
           "<node_internals>/**"
         ],
         // "program": "${workspaceFolder}\\menuBuilder\\compiledJS\\fileListInPublicJpeg.js",
-        "cwd": "${workspaceFolder}\\xforms", // run from this folder; all paths now relative to here
+        "cwd": "${workspaceFolder}\\A_xforms", // run from this folder; all paths now relative to here
         // without cwd ->  "program": "${workspaceFolder}\\menuBuilder\\compiledJS\\fileListToMenuSpec_metaData.js",
         "program": "typescriptCompiled/imagesTreeCopyNResize.js",
         "args": [
