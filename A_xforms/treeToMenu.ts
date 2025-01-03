@@ -40,6 +40,7 @@ class jsonLists {
 }
 
 runIt()
+console.log('done =======================')
 
 function runIt() {  // read in existing picture metadata (ie: caption) and add if necessary if file was added or name change
   //TestPie(); return;
