@@ -1,0 +1,4 @@
+#!/bin/bash
+# without this filename completion for command wont work
+
+node typescriptCompiled/treeToMenu.js --imgFolder ../origJPEG --menuOut outputFiles/outMenuFile.json --pictureMetaFile outputFiles/pictureMetaData.json -backupDir outputFiles/baks

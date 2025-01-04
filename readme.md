@@ -1,5 +1,7 @@
 # Tests of recursive methods and traverse file hierarchies.   
-Not intended as a real resource for others, just my own testing.  
+Not intended as a real resource for others, just my own testing.    
+*Setup described here is in the A_xforms folder. * 
+See readme in A_xforms for how to run stuff     
 
 ### This folder has a typescript app to create json menu spec from folder tree.  
 - Typescript works by getting "transpiled" into javascript by the tsc command. Install it with  

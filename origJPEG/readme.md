@@ -1,0 +1,2 @@
+- this folder is a stand-in for image file tree.   
+- it contains original files as taken by a camera or from library of congress or wikimedia commons, with no resize or modifications.    

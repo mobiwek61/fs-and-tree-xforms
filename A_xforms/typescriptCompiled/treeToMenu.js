@@ -16,10 +16,10 @@ class jsonLists {
         this.metaList = { $schema: '', comment2: '', lookup: [] };
     }
     setupHead() {
-        var _a;
         // put timestamp at top. unshift means push but at top
-        const regexMatch = (_a = new Date().toJSON().match(/.{4}\-(.*)T(.*)\..*/)) !== null && _a !== void 0 ? _a : "hide annoying possibly null msg";
-        const dateStr = regexMatch[1].replace('-', '/') + ' ' + regexMatch[2];
+        const now = new Intl.DateTimeFormat('en-us', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' }).format(new Date());
+        // const regexMatch = new Date().toJSON().match(/.{4}\-(.*)T(.*)\..*/) ?? "hide annoying possibly null msg"
+        const dateStr = now; // regexMatch[1].replace('-', '/') + ' ' + regexMatch[2]
         /* menu parser in bundle will crash if unique mwmkey not specified, even for non-images.
            so add ones. TODO: remove this requirement for non-menu items */
         this.menuList.unshift({ "image sources": "WMED wikimedia, LOC Library of congress, TMET ny met mus of art", "mwmkey": 2 });

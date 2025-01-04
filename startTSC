@@ -1,4 +1,0 @@
-#!/bin/bash
-cd A_xforms
-./scripts/tscStartWatch
-
