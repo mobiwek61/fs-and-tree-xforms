@@ -2,6 +2,7 @@
 
 //import exifr from 'exifr'
 import fs from 'fs' 
+import { testExif } from './exifHelper';
 const sharp = require('sharp');
 
 const ResizeImage = async ( srcFileName:string , newWidth:number, destFileName:string) => {
@@ -10,18 +11,26 @@ const ResizeImage = async ( srcFileName:string , newWidth:number, destFileName:s
         // var jpegData = fs.readFileSync(srcFileName, 'binary');
         // const sharpImgObj = await sharp(jpegData) // sharp does NOT return a promise! dont use .then()!
         sharpImgObj.resize({ width: newWidth })
-        // doesnt work ->  sharpImgObj.toBuffer().then((jpegData:string) => { TestPie(jpegData) })
-        // var mdat = await sharpImgObj.metadata()
-        //TestPie(sharpImgObj)
-        //console.log('==============' + TestPie2(mdat))
-        // console.log('writing file: \"' + destFileName + '\"')
-        // preserves all exif -> await sharpImgObj.keepExif().toFile(destFileName)
-        // removes all exif -> await sharpImgObj.toFile(destFileName)
-
-        // await sharpImgObj.withExifMerge({  // keeps existing but add/change
-        await sharpImgObj.withExif({        // replaces all exif
-            IFD0: { ImageDescription: 'image resized' }
-          }).toFile(destFileName)
+        var gps = testExif(srcFileName)
+        if (gps) {
+            console.log('gps for ' + srcFileName + ' data ' + gps.GPSLatitude
+                + ' data[1] ' + gps.GPSLatitude[1]
+            )
+            var exifObj = {
+                IFD0: { ImageDescription: 'image resized gps3' }, 
+                IFD3: {
+                    GPSLatitude: gps.GPSLatitude, 
+                    GPSLongitude: gps.GPSLongitude 
+                }
+            }
+            // await sharpImgObj.withExif(exifObj).toFile(destFileName)
+            // await sharpImgObj.keepExif().toFile(destFileName)
+            await sharpImgObj.withExif(exifObj).toFile(destFileName)
+         } else {
+            await sharpImgObj.withExif({        // replaces all exif
+                IFD0: { ImageDescription: 'image resized' }
+            }).toFile(destFileName)
+        }
     } catch (ex) { 
         console.log('error file: \"' + destFileName + '\" exception: ' + ex)
     }
