@@ -21,14 +21,15 @@ const ResizeImage = (srcFileName, newWidth, destFileName) => __awaiter(void 0, v
         sharpImgObj.resize({ width: newWidth });
         var gps = (0, exifHelper_1.testExif)(srcFileName);
         if (gps) {
-            console.log('gps for ' + srcFileName + ' data ' + gps.GPSLatitude
-                + ' data[1] ' + gps.GPSLatitude[1]);
+            var latStr = gps.GPSLatitude[0] + ',' + gps.GPSLatitude[1] + ',' + gps.GPSLatitude[2];
+            var lonStr = gps.GPSLongitude[0] + ',' + gps.GPSLongitude[1] + ',' + gps.GPSLongitude[2];
+            // console.log('gps for ' + srcFileName + ' latitude: ' + gps.GPSLatitude.toString()
+            //     + ' data[2] ' + gps.GPSLatitude[2] + '\nlongitude: ' + gps.GPSLongitude
+            // )
+            console.log('to be written: ' + latStr + '   ,   ' + lonStr);
             var exifObj = {
                 IFD0: { ImageDescription: 'image resized gps3' },
-                IFD3: {
-                    GPSLatitude: gps.GPSLatitude,
-                    GPSLongitude: gps.GPSLongitude
-                }
+                IFD3: { GPSLatitude: '3,6,9', GPSLongitude: lonStr }
             };
             // await sharpImgObj.withExif(exifObj).toFile(destFileName)
             // await sharpImgObj.keepExif().toFile(destFileName)

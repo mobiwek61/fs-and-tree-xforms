@@ -13,15 +13,17 @@ function testExif(filePath) {
     console.log('zzaatestExif');
     // https://www.npmjs.com/package/jpeg-exif
     const data = exif.parseSync(filePath);
-    console.log(data.GPSInfo);
+    //console.log(data.GPSInfo)
     if (data.GPSInfo) {
         var restcoord = toStr(data.GPSInfo.GPSLatitude) + data.GPSInfo.GPSLatitudeRef + '+' +
             toStr(data.GPSInfo.GPSLongitude) + data.GPSInfo.GPSLongitudeRef;
         // SET debugger breakpoint here to see all the stuff
-        // console.log(restcoord)
+        console.log('orig data:\nGPSLatitude ' + data.GPSInfo.GPSLatitude + '\nGPSLongitude ' + data.GPSInfo.GPSLongitude);
         /////return { GPSLatitude: '[' + data.GPSInfo.GPSLatitude + ']', GPSLongitude: '[' + data.GPSInfo.GPSLongitude + ']' }
-        return { GPSLatitude: data.GPSInfo.GPSLatitude.toString(),
-            GPSLongitude: data.GPSInfo.GPSLongitude.toString() };
+        // return { GPSLatitude: data.GPSInfo.GPSLatitude.toString(), 
+        //          GPSLongitude: data.GPSInfo.GPSLongitude.toString() }
+        return { GPSLatitude: data.GPSInfo.GPSLatitude,
+            GPSLongitude: data.GPSInfo.GPSLongitude };
     }
     return null;
     // window.open('https://www.google.com/maps/place/' + restcoord)
