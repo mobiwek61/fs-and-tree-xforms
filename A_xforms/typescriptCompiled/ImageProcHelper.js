@@ -21,41 +21,29 @@ const ResizeImage = (srcFileName, newWidth, destFileName) => __awaiter(void 0, v
         sharpImgObj.resize({ width: newWidth });
         var gps = (0, exifHelper_1.testExif)(srcFileName); // "| null" gets rid of warning
         if (gps) {
+            // !!SAVE THIS CODE!!  It took hours to figure this out! 
+            // This format may be specific to sharp.js or maybe not.
+            // Tested by re-opening image with web app and fetching gps info
+            // Researching says data is saved as rational numbers ??????
             var latStr = gps.GPSLatitude[0] + ' ' + gps.GPSLatitude[1] +
-                ' ' + gps.GPSLatitude[2]; //  + ' ' + gps.GPSLatitudeRef 
+                ' ' + gps.GPSLatitude[2];
             var lonStr = gps.GPSLongitude[0] + ' ' + gps.GPSLongitude[1] +
-                ' ' + gps.GPSLongitude[2]; // + ' ' + gps.GPSLongitudeRef
-            console.log('to be written: ' + latStr + '   ,   ' + lonStr);
+                ' ' + gps.GPSLongitude[2];
             var exifObj = {
-                IFD0: { ImageDescription: 'image resized gps2223' },
-                IFD3: { GPSLatitude: latStr, GPSLongitude: lonStr,
+                IFD0: { ImageDescription: 'image resized with gps' },
+                IFD3: {
+                    GPSLatitude: latStr, GPSLongitude: lonStr,
                     GPSLatitudeRef: gps.GPSLatitudeRef,
                     GPSLongitudeRef: gps.GPSLongitudeRef
                 }
             };
-            // var exifObj = { GPSLatitude: dmsArrayToRationalForEXIF_GPS(gps.GPSLatitude), 
-            //                 GPSLongitude: dmsArrayToRationalForEXIF_GPS(gps.GPSLongitude) }
-            // var exifObj = { 
-            //     IFD3: {
-            //         GPSLatitude: 'degrees: [111, 1], minutes: [222, 1], seconds: [333, 100]',
-            //         GPSLongitude: 'degrees: [111, 1], minutes: [222, 1], seconds: [333, 100]',
-            //     }       
-            // }
-            // var exifObj = { 
-            //     IFD3: {
-            //         GPSLatitude: '88°44\'22.33"' + gps.GPSLatitudeRef,
-            //         GPSLongitude: '77°33\'88.99"' + gps.GPSLongitudeRef,
-            //         GPSLatitudeRef: gps.GPSLatitudeRef,
-            //         GPSLongitudeRef: gps.GPSLongitudeRef
-            //     }       
-            // }
             console.log('exifObj ' + JSON.stringify(exifObj));
-            // await sharpImgObj.withExif(exifObj).toFile(destFileName)
             // await sharpImgObj.keepExif().toFile(destFileName)
             yield sharpImgObj.withExif(exifObj).toFile(destFileName);
             // await sharpImgObj.toFile(destFileName)
         }
         else {
+            // no exif data, so dont save it
             yield sharpImgObj.withExif({
                 IFD0: { ImageDescription: 'image resized' }
             }).toFile(destFileName);
@@ -71,28 +59,4 @@ const ResizeImage = (srcFileName, newWidth, destFileName) => __awaiter(void 0, v
     // sharp(args.srcFileName).resize(55).toFile('foo.jpg')
 });
 exports.ResizeImage = ResizeImage;
-function dmsArrayToRationalForEXIF_GPS(dmsArr) {
-    return {
-        degrees: [dmsArr[0], 1],
-        minutes: [dmsArr[1], 1],
-        seconds: [dmsArr[2], 100]
-        // seconds: [Math.round(seconds * 100), 100]
-    };
-}
-/*
-var exifObj = {
-                IFD3: {
-                    GPSLatitude:
-                        {
-                            degrees: '[111, 1]', minutes: '[222, 1]',
-                            seconds: '[333, 100]'
-                        },
-                        GPSLongitude:
-                        {
-                            degrees: '[111, 1]', minutes: '[222, 1]',
-                            seconds: '[333, 100]'
-                        }
-                    }
-            }
-                    */ 
 //# sourceMappingURL=ImageProcHelper.js.map

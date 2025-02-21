@@ -12,10 +12,9 @@ function testExif(filePath:string) {
     const data = exif.parseSync(filePath);
     //console.log(data.GPSInfo)
     if (data.GPSInfo) {
-        // var restcoordForUrl = toStr(data.GPSInfo.GPSLatitude)+data.GPSInfo.GPSLatitudeRef +'+'+
+        // SAVE!!! var restcoordForUrl = toStr(data.GPSInfo.GPSLatitude)+data.GPSInfo.GPSLatitudeRef +'+'+
         //     toStr(data.GPSInfo.GPSLongitude)+data.GPSInfo.GPSLongitudeRef; 
-        //var foo:number = data.GPSInfo.GPSLatitude[2] + .0000000099
-        console.log('2orig data:\nGPSLatitude ' + data.GPSInfo.GPSLatitude[2] + '\nGPSLongitude ' + data.GPSInfo.GPSLongitude)
+        // console.log('2orig data:\nGPSLatitude ' + data.GPSInfo.GPSLatitude[2] + '\nGPSLongitude ' + data.GPSInfo.GPSLongitude)
         return { GPSLatitude: data.GPSInfo.GPSLatitude,    // returns as array length 3
                 GPSLongitude: data.GPSInfo.GPSLongitude,
                 GPSLatitudeRef: data.GPSInfo.GPSLatitudeRef,
