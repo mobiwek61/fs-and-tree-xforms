@@ -113,8 +113,8 @@ function recurseFolders(srcDirRecurseLevel, srcRootPath, destinationRootDir, LIV
                 }
                 else {
                     fsPkg.writeFileSync(destPath_fullSize, 'test content', 'utf8');
-                    (0, ImageProcHelper_1.ResizeImage)(sourcePath, RESIZE_PX_FULL, destPath_fullSize);
-                    /////ResizeImage(sourcePath, RESIZE_PX_MINI, destPath_miniSize)
+                    //ResizeImage(sourcePath, RESIZE_PX_FULL, destPath_fullSize)
+                    (0, ImageProcHelper_1.ResizeImage)(sourcePath, RESIZE_PX_MINI, destPath_miniSize);
                     console.log('resized');
                 }
             }

@@ -1,4 +1,13 @@
 #!/bin/bash
 # without this filename completion for command wont work
 
-node.exe typescriptCompiled/imagesTreeCopyNResize.js --imgSrcFolder ../origJPEG/jpeg --PIXMINI 99 --PIXFULL 446
+commd="node.exe typescriptCompiled/imagesTreeCopyNResize.js --imgSrcFolder ../origJPEG/jpeg --PIXMINI 10 --PIXFULL 446"
+
+# echo $(tput setaf 1) # set font color 1==red
+echo $(tput setaf 1) command line: $(tput sgr0)
+echo $commd
+echo -------------------------------------
+# now run it
+eval $commd
+
+

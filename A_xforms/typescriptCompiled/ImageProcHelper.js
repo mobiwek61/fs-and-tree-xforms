@@ -31,6 +31,7 @@ const ResizeImage = (srcFileName, newWidth, destFileName) => __awaiter(void 0, v
             // await sharpImgObj.withExif(exifObj).toFile(destFileName)
             // await sharpImgObj.keepExif().toFile(destFileName)
             yield sharpImgObj.withExif(exifObj).toFile(destFileName);
+            // await sharpImgObj.toFile(destFileName)
         }
         else {
             yield sharpImgObj.withExif({

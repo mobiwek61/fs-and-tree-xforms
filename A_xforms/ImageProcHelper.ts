@@ -25,6 +25,7 @@ const ResizeImage = async ( srcFileName:string , newWidth:number, destFileName:s
             // await sharpImgObj.withExif(exifObj).toFile(destFileName)
             // await sharpImgObj.keepExif().toFile(destFileName)
             await sharpImgObj.withExif(exifObj).toFile(destFileName)
+            // await sharpImgObj.toFile(destFileName)
          } else {
             await sharpImgObj.withExif({        // replaces all exif
                 IFD0: { ImageDescription: 'image resized' }
