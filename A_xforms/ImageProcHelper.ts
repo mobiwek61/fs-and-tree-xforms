@@ -5,23 +5,22 @@ import fs from 'fs'
 import { testExif } from './exifHelper';
 const sharp = require('sharp');
 
+interface LatLonData { GPSLatitude:Array<number>, GPSLongitude:Array<number> }
+
 const ResizeImage = async ( srcFileName:string , newWidth:number, destFileName:string) => {
     try {
         const sharpImgObj = sharp(srcFileName) // sharp does NOT return a promise! dont use .then()!
         // var jpegData = fs.readFileSync(srcFileName, 'binary');
         // const sharpImgObj = await sharp(jpegData) // sharp does NOT return a promise! dont use .then()!
         sharpImgObj.resize({ width: newWidth })
-        var gps = testExif(srcFileName)
+        var gps:LatLonData | null = testExif(srcFileName)   // "| null" gets rid of warning
         if (gps) {
-            var latStr = gps.GPSLatitude[0] + ',' + gps.GPSLatitude[1] + ',' + gps.GPSLatitude[2] 
-            var lonStr = gps.GPSLongitude[0] + ',' + gps.GPSLongitude[1] + ',' + gps.GPSLongitude[2]
-            // console.log('gps for ' + srcFileName + ' latitude: ' + gps.GPSLatitude.toString()
-            //     + ' data[2] ' + gps.GPSLatitude[2] + '\nlongitude: ' + gps.GPSLongitude
-            // )
+            var latStr = gps.GPSLatitude[0] + ' ' + gps.GPSLatitude[1] + ' ' + gps.GPSLatitude[2] 
+            var lonStr = gps.GPSLongitude[0] + ' ' + gps.GPSLongitude[1] + ' ' + gps.GPSLongitude[2]
             console.log('to be written: ' + latStr + '   ,   ' + lonStr)
             var exifObj = {
                 IFD0: { ImageDescription: 'image resized gps3' }, 
-                IFD3: { GPSLatitude: '3,6,9', GPSLongitude: lonStr }
+                IFD3: { GPSLatitude: latStr, GPSLongitude: lonStr }
             }
             // await sharpImgObj.withExif(exifObj).toFile(destFileName)
             // await sharpImgObj.keepExif().toFile(destFileName)

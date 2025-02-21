@@ -15,18 +15,15 @@ function testExif(filePath) {
     const data = exif.parseSync(filePath);
     //console.log(data.GPSInfo)
     if (data.GPSInfo) {
-        var restcoord = toStr(data.GPSInfo.GPSLatitude) + data.GPSInfo.GPSLatitudeRef + '+' +
-            toStr(data.GPSInfo.GPSLongitude) + data.GPSInfo.GPSLongitudeRef;
-        // SET debugger breakpoint here to see all the stuff
-        console.log('orig data:\nGPSLatitude ' + data.GPSInfo.GPSLatitude + '\nGPSLongitude ' + data.GPSInfo.GPSLongitude);
-        /////return { GPSLatitude: '[' + data.GPSInfo.GPSLatitude + ']', GPSLongitude: '[' + data.GPSInfo.GPSLongitude + ']' }
-        // return { GPSLatitude: data.GPSInfo.GPSLatitude.toString(), 
-        //          GPSLongitude: data.GPSInfo.GPSLongitude.toString() }
+        // var restcoordForUrl = toStr(data.GPSInfo.GPSLatitude)+data.GPSInfo.GPSLatitudeRef +'+'+
+        //     toStr(data.GPSInfo.GPSLongitude)+data.GPSInfo.GPSLongitudeRef; 
+        //var foo:number = data.GPSInfo.GPSLatitude[2] + .0000000099
+        console.log('2orig data:\nGPSLatitude ' + data.GPSInfo.GPSLatitude[2] + '\nGPSLongitude ' + data.GPSInfo.GPSLongitude);
         return { GPSLatitude: data.GPSInfo.GPSLatitude,
             GPSLongitude: data.GPSInfo.GPSLongitude };
     }
     return null;
-    // window.open('https://www.google.com/maps/place/' + restcoord)
+    // window.open('https://www.google.com/maps/place/' + restcoordForUrl)
 }
 exports.testExif = testExif;
 function toStr(gg) { return gg[0] + '°' + gg[1] + '\'' + gg[2] + '\"'; }

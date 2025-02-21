@@ -38,12 +38,16 @@ console.log( 'This javascript, \"' + BRIGHTYELLOW + path.relative( process.cwd()
   ' --PIXFULL 444 --PIXMINI 88 ' + COLRESET)
 if (!yargsCmds.imgSrcFolder) { console.log('imgSrcFolder not specified. Quitting. '); process.exit(); }
 if (!yargsCmds.PIXFULL || !yargsCmds.PIXMINI) { console.log('PIXFULL or PIXMINI not specified. Quitting. '); process.exit(); }
-if (yargsCmds.DRY_RUN != 'true') {  // set this way when developing ie VSCode
-  console.log(BRIGHTRED + 'Enter \"y\" to create files & folders. Otherwise does dry run.'  + COLRESET)
-  var mat:any = readlineSync.question().match(/^(y|Y)$/) // ^ is start, match y or Y then end of string
-  DRY_RUN = mat ? false : true
-} 
-// DRY_RUN=false;
+
+// if (yargsCmds.DRY_RUN != 'true') {  // set this way when developing ie VSCode
+//   console.log(BRIGHTRED + 'Enter \"y\" to create files & folders. Otherwise does dry run.'  + COLRESET)
+//   var mat:any = readlineSync.question().match(/^(y|Y)$/) // ^ is start, match y or Y then end of string
+//   DRY_RUN = mat ? false : true
+// } 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+DRY_RUN=false;
+
+
 runIt()
 console.log(BRIGHTYELLOW + 'DONE with DRY_RUN=' + DRY_RUN);
 
@@ -102,7 +106,7 @@ function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destina
           } else {
               fsPkg.writeFileSync(destPath_fullSize, 'test content', 'utf8');
               ResizeImage(sourcePath, RESIZE_PX_FULL, destPath_fullSize)
-              ResizeImage(sourcePath, RESIZE_PX_MINI, destPath_miniSize)
+              /////ResizeImage(sourcePath, RESIZE_PX_MINI, destPath_miniSize)
               console.log('resized')
           }
         }
