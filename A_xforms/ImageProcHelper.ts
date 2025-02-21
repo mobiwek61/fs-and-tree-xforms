@@ -20,17 +20,21 @@ const ResizeImage = async ( srcFileName:string , newWidth:number, destFileName:s
             // !!SAVE THIS CODE!!  It took hours to figure this out! 
             // This format may be specific to sharp.js or maybe not.
             // Tested by re-opening image with web app and fetching gps info
-            // Researching says data is saved as rational numbers ??????
+            // Things get weird because when exif data is retrieved 
+            // from a file it comes out as an array. Some docs say it's saved
+            // as a ??rational number??!
+            // Display of exif data in windows Properties looks completely
+            // different than below, BUT it's able to read this data ok.
             var latStr = gps.GPSLatitude[0] + ' ' + gps.GPSLatitude[1] + 
                 ' ' + gps.GPSLatitude[2]
             var lonStr = gps.GPSLongitude[0] + ' ' + gps.GPSLongitude[1] + 
                 ' ' + gps.GPSLongitude[2]
             var exifObj = {
-                IFD0: { ImageDescription: 'image resized with gps' }, 
+                IFD0: { ImageDescription: 'image resized with gps 22' }, 
                 IFD3: { 
                     GPSLatitude: latStr, GPSLongitude: lonStr,
-                    GPSLatitudeRef: gps.GPSLatitudeRef,
-                    GPSLongitudeRef: gps.GPSLongitudeRef
+                    GPSLatitudeRef: gps.GPSLatitudeRef,  // N/S
+                    GPSLongitudeRef: gps.GPSLongitudeRef // E/W
                  }
             }
             console.log('exifObj ' + JSON.stringify(exifObj))
