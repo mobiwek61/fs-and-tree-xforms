@@ -20,7 +20,10 @@ function testExif(filePath) {
         //var foo:number = data.GPSInfo.GPSLatitude[2] + .0000000099
         console.log('2orig data:\nGPSLatitude ' + data.GPSInfo.GPSLatitude[2] + '\nGPSLongitude ' + data.GPSInfo.GPSLongitude);
         return { GPSLatitude: data.GPSInfo.GPSLatitude,
-            GPSLongitude: data.GPSInfo.GPSLongitude };
+            GPSLongitude: data.GPSInfo.GPSLongitude,
+            GPSLatitudeRef: data.GPSInfo.GPSLatitudeRef,
+            GPSLongitudeRef: data.GPSInfo.GPSLongitudeRef
+        };
     }
     return null;
     // window.open('https://www.google.com/maps/place/' + restcoordForUrl)
