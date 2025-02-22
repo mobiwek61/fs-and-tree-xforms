@@ -10,16 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ResizeImage = void 0;
+exports.ResizeImageAndModifyExifIncludingGPS = void 0;
 const exifHelper_1 = require("./exifHelper");
 const sharp = require('sharp');
-const ResizeImage = (srcFileName, newWidth, destFileName) => __awaiter(void 0, void 0, void 0, function* () {
+const ResizeImageAndModifyExifIncludingGPS = (srcFileName, newWidth, destFileName) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const sharpImgObj = sharp(srcFileName); // sharp does NOT return a promise! dont use .then()!
         // var jpegData = fs.readFileSync(srcFileName, 'binary');
         // const sharpImgObj = await sharp(jpegData) // sharp does NOT return a promise! dont use .then()!
         sharpImgObj.resize({ width: newWidth });
-        var gps = (0, exifHelper_1.testExif)(srcFileName); // "| null" gets rid of warning
+        // "| null" gets rid of typescript warning
+        var gps = (0, exifHelper_1.testExif)(srcFileName);
         if (gps) {
             // !!SAVE THIS CODE!!  It took hours to figure this out! 
             // This format may be specific to sharp.js or maybe not.
@@ -41,13 +42,14 @@ const ResizeImage = (srcFileName, newWidth, destFileName) => __awaiter(void 0, v
                     GPSLongitudeRef: gps.GPSLongitudeRef // E/W
                 }
             };
-            console.log('exifObj ' + JSON.stringify(exifObj));
+            // console.log('exifObj ' + JSON.stringify(exifObj))
             // await sharpImgObj.keepExif().toFile(destFileName)
+            console.log("saving with EXIF: ImageDescription and GPS only. Width: " + newWidth);
             yield sharpImgObj.withExif(exifObj).toFile(destFileName);
             // await sharpImgObj.toFile(destFileName)
         }
         else {
-            // no exif data, so dont save it
+            console.log("saving with EXIF: ImageDescription only. Width: " + newWidth);
             yield sharpImgObj.withExif({
                 IFD0: { ImageDescription: 'image resized' }
             }).toFile(destFileName);
@@ -62,5 +64,5 @@ const ResizeImage = (srcFileName, newWidth, destFileName) => __awaiter(void 0, v
     //promiseA.then((sharpImage: any) => { sharpImage.resize({ width: 55 }) })
     // sharp(args.srcFileName).resize(55).toFile('foo.jpg')
 });
-exports.ResizeImage = ResizeImage;
+exports.ResizeImageAndModifyExifIncludingGPS = ResizeImageAndModifyExifIncludingGPS;
 //# sourceMappingURL=ImageProcHelper.js.map

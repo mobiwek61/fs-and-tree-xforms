@@ -9,13 +9,14 @@ interface LatLonData { GPSLatitude:Array<number>, GPSLongitude:Array<number>,
     GPSLatitudeRef:number, GPSLongitudeRef:number
  }
 
-const ResizeImage = async ( srcFileName:string , newWidth:number, destFileName:string) => {
+const ResizeImageAndModifyExifIncludingGPS = async ( srcFileName:string , newWidth:number, destFileName:string) => {
     try {
         const sharpImgObj = sharp(srcFileName) // sharp does NOT return a promise! dont use .then()!
         // var jpegData = fs.readFileSync(srcFileName, 'binary');
         // const sharpImgObj = await sharp(jpegData) // sharp does NOT return a promise! dont use .then()!
         sharpImgObj.resize({ width: newWidth })
-        var gps:LatLonData | null = testExif(srcFileName)   // "| null" gets rid of warning
+        // "| null" gets rid of typescript warning
+        var gps:LatLonData | null = testExif(srcFileName)   
         if (gps) {
             // !!SAVE THIS CODE!!  It took hours to figure this out! 
             // This format may be specific to sharp.js or maybe not.
@@ -37,12 +38,14 @@ const ResizeImage = async ( srcFileName:string , newWidth:number, destFileName:s
                     GPSLongitudeRef: gps.GPSLongitudeRef // E/W
                  }
             }
-            console.log('exifObj ' + JSON.stringify(exifObj))
+            // console.log('exifObj ' + JSON.stringify(exifObj))
             // await sharpImgObj.keepExif().toFile(destFileName)
+
+            console.log("saving with EXIF: ImageDescription and GPS only. Width: " + newWidth)
             await sharpImgObj.withExif(exifObj).toFile(destFileName)
             // await sharpImgObj.toFile(destFileName)
          } else {
-            // no exif data, so dont save it
+            console.log("saving with EXIF: ImageDescription only. Width: " + newWidth)
             await sharpImgObj.withExif({        // replaces all exif
                 IFD0: { ImageDescription: 'image resized' }
             }).toFile(destFileName)
@@ -59,5 +62,5 @@ const ResizeImage = async ( srcFileName:string , newWidth:number, destFileName:s
 }
 
 
-export { ResizeImage }
+export { ResizeImageAndModifyExifIncludingGPS }
 

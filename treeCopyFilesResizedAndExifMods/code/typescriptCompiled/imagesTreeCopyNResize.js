@@ -8,7 +8,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 // import { system } from "systeminformation";
 const ImageProcHelper_1 = require("./ImageProcHelper");
-const exifHelper_1 = require("./exifHelper");
+// import { testExif } from "./exifHelper";
 const path = require('path');
 var readlineSync = require('readline-sync');
 const fsPkg = require('fs'); // syntax from node js file running with node
@@ -27,19 +27,19 @@ const REDBACKGRND = '\x1b[41m';
 const RESIZE_PX_FULL = yargsCmds.PIXFULL;
 const RESIZE_PX_MINI = yargsCmds.PIXMINI;
 /** destination of resized images. Cannot begin with / or have ..   */
-const DEST_ROOT = 'outputFiles/xformedImgs';
+const DEST_ROOT = 'jpegs/outputFiles';
 const DEST_FULL = DEST_ROOT + '/fullsize';
 const DEST_MINI = DEST_ROOT + '/miniSize';
 // in VSCode, to get interactive terminal, launch.json must have this ->      "console": "integratedTerminal",
 var DRY_RUN = true;
-showFullCommandLine();
-console.log('proceeding with DRY_RUN=' + DRY_RUN);
-console.log(BRIGHTRED + 'Be sure to transpile *.ts to *.js before running: \n' +
-    '   ../node_modules/typescript/bin/tsc --project tsconfig_dogs.json --watch' + COLRESET);
-console.log('This javascript, \"' + BRIGHTYELLOW + path.relative(process.cwd(), process.argv[1]) + COLRESET +
-    '\" Recursively copies\n    source folder to subfolder (fixed value): ' + BRIGHTYELLOW + DEST_ROOT + COLRESET +
-    '.\n    Usage:  ' + BRIGHTYELLOW + 'node.exe typescriptCompiled/imagesTreeCopyNResize.js --imgSrcFolder ../public/jpeg' +
-    ' --PIXFULL 444 --PIXMINI 88 ' + COLRESET);
+//showFullCommandLine()
+// console.log(BRIGHTRED + 'Be sure to transpile *.ts to *.js before running: \n' +
+//   '   ../node_modules/typescript/bin/tsc --project tsconfig_dogs.json --watch' + COLRESET
+// )
+// console.log( 'This javascript, \"' + BRIGHTYELLOW + path.relative( process.cwd(), process.argv[1])  + COLRESET + 
+//   '\" Recursively copies\n    source folder to subfolder (fixed value): '+ BRIGHTYELLOW + DEST_ROOT + COLRESET + 
+//   '.\n    Usage:  ' + BRIGHTYELLOW + 'node.exe typescriptCompiled/imagesTreeCopyNResize.js --imgSrcFolder ../public/jpeg' + 
+//   ' --PIXFULL 444 --PIXMINI 88 ' + COLRESET)
 if (!yargsCmds.imgSrcFolder) {
     console.log('imgSrcFolder not specified. Quitting. ');
     process.exit();
@@ -54,9 +54,9 @@ if (!yargsCmds.PIXFULL || !yargsCmds.PIXMINI) {
 //   DRY_RUN = mat ? false : true
 // } 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-DRY_RUN = false;
+DRY_RUN = (yargsCmds.DRY_RUN === 'true') ? true : false;
 runIt();
-console.log(BRIGHTYELLOW + 'DONE with DRY_RUN=' + DRY_RUN);
+console.log(BRIGHTYELLOW + '\nDONE with DRY_RUN=' + DRY_RUN + ' files were ' + ((DRY_RUN === true) ? 'NOT WRITTEN' : 'WRITTEN'));
 function runIt() {
     if (!fsPkg.existsSync(DEST_ROOT)) {
         console.log(BRIGHTRED + 'folder \"' + DEST_ROOT + '\" must exist. \nTo enforce only down-tree writes for safety reasons.\n' +
@@ -101,11 +101,11 @@ function recurseFolders(srcDirRecurseLevel, srcRootPath, destinationRootDir, LIV
         else {
             console.log(BRIGHTGREEN + 'jpeg: ' + COLRESET + '\nsource:      ' + BRIGHTRED + sourcePath + COLRESET + '\ndest: ' +
                 BRIGHTRED + destPath_fullSize + '\n      ' + destPath_miniSize);
-            if (new RegExp(/.*Beatles.*/, 'i').test(sourcePath)) {
-                // console.log('==============' + TestPie2(sourcePath))
-                (0, exifHelper_1.testExif)(sourcePath);
-                //process.exit()
-            }
+            // if (new RegExp(/.*Beatles.*/, 'i').test(sourcePath)) {
+            //   // console.log('==============' + TestPie2(sourcePath))
+            //   testExif(sourcePath)
+            //   //process.exit()
+            // }
             if (LIVE_RUN) {
                 if (!sourcePath.match(/.*(\.jpg|\.JPG|\.jpeg|\.JPEG)/)) {
                     console.log('not image, copying file ' + sourcePath);
@@ -113,9 +113,8 @@ function recurseFolders(srcDirRecurseLevel, srcRootPath, destinationRootDir, LIV
                 }
                 else {
                     //fsPkg.writeFileSync(destPath_fullSize, 'test content', 'utf8');
-                    //ResizeImage(sourcePath, RESIZE_PX_FULL, destPath_fullSize)
-                    (0, ImageProcHelper_1.ResizeImage)(sourcePath, RESIZE_PX_MINI, destPath_miniSize);
-                    console.log('resized');
+                    (0, ImageProcHelper_1.ResizeImageAndModifyExifIncludingGPS)(sourcePath, RESIZE_PX_FULL, destPath_fullSize);
+                    (0, ImageProcHelper_1.ResizeImageAndModifyExifIncludingGPS)(sourcePath, RESIZE_PX_MINI, destPath_miniSize);
                 }
             }
         }

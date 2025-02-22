@@ -10,7 +10,6 @@ const exif = require('jpeg-exif'); // https://www.npmjs.com/package/jpeg-exif
     https://www.google.com/maps/place/40°40'16.5"N 73°57'49.3"W
  */
 function testExif(filePath) {
-    console.log('zzaatestExif');
     // https://www.npmjs.com/package/jpeg-exif
     const data = exif.parseSync(filePath);
     //console.log(data.GPSInfo)
