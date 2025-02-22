@@ -1,6 +1,7 @@
 #!/bin/bash
 # without this filename completion for command wont work
 
+echo $(tput setaf 1)!!!! Must compile with this command: $(tput sgr0)
 commd="node.exe typescriptCompiled/imagesTreeCopyNResize.js --imgSrcFolder ../origJPEG/jpeg --PIXMINI 10 --PIXFULL 446"
 
 # echo $(tput setaf 1) # set font color 1==red
@@ -9,5 +10,7 @@ echo $commd
 echo -------------------------------------
 # now run it
 eval $commd
+echo $(tput setaf 1)!!!! Must compile with this command: $(tput sgr0)
+echo '../node_modules/typescript/bin/tsc --project tsconfig_dogs.json --watch'
 
 
