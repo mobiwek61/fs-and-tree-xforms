@@ -1,5 +1,8 @@
 # updated 04-04-2024b
 # for image reducer
+**/outputFiles/fullsize/*
+**/outputFiles/miniSize/*
+
 trash*.jpeg
 # *.jpg
 # *.jpeg
@@ -8,11 +11,6 @@ trash*.jpeg
 **/outputFiles/xformedImgs/*
 **/outputFiles/baks/*
 
-# consecutive numbered backups of converted files by menuBuilder
-**/shrunkImages/* 
-# expendable javascript files, result of tsc Typescript compiler
-**/compiledJS/*
-**/tempFolderFromAi/*
 
 node_modules*
 # need this to preserve exact dependency tree    package-lock.json

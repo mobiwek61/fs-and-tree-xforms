@@ -10,7 +10,7 @@ if !(test -f "$COMPILED_TS_TO_JS_FILE"); then
   exit;
 fi
 
-commd="node.exe $COMPILED_TS_TO_JS_FILE --imgSrcFolder jpegs/origJPEG --PIXMINI 10 --PIXFULL 446 --DRY_RUN false"
+commd="node.exe $COMPILED_TS_TO_JS_FILE --imgSrcFolder jpegs/origJPEG --PIXMINI 15 --PIXFULL 445 --DRY_RUN false"
 
 # echo $(tput setaf 1) # set font color 1==red
 # echo $(tput setaf 1) command line: $(tput sgr0)
