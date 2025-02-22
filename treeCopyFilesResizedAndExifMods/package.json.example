@@ -1,0 +1,19 @@
+{
+  "name": "abc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "22.13.5",
+    "jpeg-exif": "1.1.4",
+    "readline-sync": "1.4.10",
+    "sharp": "0.33.5",
+    "typescript": "5.7.3",
+    "yargs": "17.7.2"
+  }
+}
