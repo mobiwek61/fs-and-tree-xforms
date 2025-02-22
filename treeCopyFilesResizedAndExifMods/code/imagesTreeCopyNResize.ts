@@ -104,7 +104,7 @@ function recurseFolders(srcDirRecurseLevel: string, srcRootPath: string, destina
               console.log('not image, copying file ' + sourcePath)
               fsPkg.copyFileSync(sourcePath, destPath_fullSize)
           } else {
-              fsPkg.writeFileSync(destPath_fullSize, 'test content', 'utf8');
+              //fsPkg.writeFileSync(destPath_fullSize, 'test content', 'utf8');
               //ResizeImage(sourcePath, RESIZE_PX_FULL, destPath_fullSize)
               ResizeImage(sourcePath, RESIZE_PX_MINI, destPath_miniSize)
               console.log('resized')

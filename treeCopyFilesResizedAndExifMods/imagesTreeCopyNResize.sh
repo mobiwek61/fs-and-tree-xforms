@@ -2,7 +2,7 @@
 # without this filename completion for command wont work
 
 echo $(tput setaf 1)!!!! Must compile with this command: $(tput sgr0)
-commd="node.exe typescriptCompiled/imagesTreeCopyNResize.js --imgSrcFolder ../origJPEG/jpeg --PIXMINI 10 --PIXFULL 446"
+commd="node.exe code/typescriptCompiled/imagesTreeCopyNResize.js --imgSrcFolder origJPEG/jpeg --PIXMINI 10 --PIXFULL 446"
 
 # echo $(tput setaf 1) # set font color 1==red
 echo $(tput setaf 1) command line: $(tput sgr0)
@@ -11,6 +11,7 @@ echo -------------------------------------
 # now run it
 eval $commd
 echo $(tput setaf 1)!!!! Must compile with this command: $(tput sgr0)
-echo '../node_modules/typescript/bin/tsc --project tsconfig_dogs.json --watch'
+echo '../node_modules/typescript/bin/tsc --project code/tsconfig_dogs.json --watch'
+echo above stays in the window and recompiles .ts files whenever modified
 
 
